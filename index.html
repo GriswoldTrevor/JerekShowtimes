@@ -1,0 +1,165 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>IMAX Showtimes</title>
+	<meta name="description" content="Film Showtimes">
+	<meta name="author" content="Trevor Griswold">
+
+	<style type="text/css">
+		.filmPoster {
+			height: 500px;
+			display: block;
+			margin: auto;
+		}
+		.filmTitle {
+			visibility: hidden;
+		}
+		.filmShowtimes {
+			text-align: center;
+			font-weight: bold;
+			font-size: 1.5em;
+		}
+		.filmContainer {
+			float: left;
+			padding: 0px 10px 10px 0px;
+			width: 400px;
+		}
+		
+		#HeaderTitle {
+			font-size: 5em;
+			font-weight: bold;
+		}
+		#CurrentTime {
+			font-size: 2em;
+		}
+		
+		body {
+			background-color: darkblue;
+			color: white;
+		}
+	</style>
+</head>
+
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://apis.google.com/js/api.js"></script>
+	<script type="text/javascript">
+		$( document ).ready(function() {
+			$("#CurrentTime").text(getDateTimeText());
+			parseShowtimeData();
+		});
+		
+		function parseShowtimeData(){
+			const apiKey = 'AIzaSyDIvvUDqPSfZf3Z35d5QI3HUVYPgaLXzLQ';
+			const spreadsheetId = '1yeaCu-prtDJVmNmYojFmPCZDtaDi8g-QrZP4MIPINbU';
+			const filmRange = 'Films!A%3AC';
+			const showtimeRange = 'Showtimes!A%3AD';
+			const renderOptions = 'dateTimeRenderOption=FORMATTED_STRING&majorDimension=ROWS&valueRenderOption=UNFORMATTED_VALUE';
+			
+			let parsedShowtimeData = {};
+			
+			$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+filmRange+'?'+renderOptions+'&key='+apiKey, function(data) {
+				let filmData = data.values.slice(1);
+				for (let i = 0; i < filmData.length; i++) {
+					const filmCode = filmData[i][0];
+					parsedShowtimeData[filmCode] = {
+						name: filmData[i][1],
+						posterURL: filmData[i][2],
+						showtimes: []
+					};
+				}
+				
+				$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+showtimeRange+'?'+renderOptions+'&key='+apiKey, function(data) {
+					let showtimeData = data.values.slice(1);
+					for (let i = 0; i < showtimeData.length; i++) {
+						const startDate = new Date(showtimeData[i][2]);
+						const endDate = new Date(showtimeData[i][3]);
+						const today = new Date();
+						
+						if (startDate <= today && endDate >= today) {
+							const filmCode = showtimeData[i][0];
+							parsedShowtimeData[filmCode].showtimes.push(showtimeData[i][1]);
+						}
+					}
+					console.log(parsedShowtimeData);
+					
+					let showtimeContainer = $("#ShowtimeContainer");
+					for (let p in parsedShowtimeData) {
+						if (parsedShowtimeData.hasOwnProperty(p)) {
+							if (parsedShowtimeData[p].showtimes.length > 0) {
+								showtimeContainer.append("<div class='filmContainer'>"+
+									"<div class='filmTitle'>"+parsedShowtimeData[p].name+"</div>"+
+									"<div class='filmPoster'><img class='filmPoster' src='"+parsedShowtimeData[p].posterURL+"'></div>"+
+									"<div class='filmShowtimes'>"+sortByTime(parsedShowtimeData[p].showtimes).join('&nbsp;&nbsp;&nbsp;')+"</div>"+
+									"</div>");
+							}
+						}
+					}
+				});
+			});
+		}
+		
+		function sortByTime(values) {
+			return values.sort(function (t1, t2) { return new Date('1970/01/01 ' + t1) - new Date('1970/01/01 ' + t2);});
+		}
+		function getDateTimeText() {
+			const dateTime = new Date();
+			return (getDateText(dateTime) + " " + getTimeText(dateTime)).toUpperCase();
+		}
+		function getTimeText(time) {
+			let timeSuffix = "am";
+			let timeHours = time.getHours();
+			if (timeHours == 0) {
+			  timeHours = 12;
+			  timeSuffix = "pm";
+			} else if (timeHours > 12) {
+			  timeHours = timeHours - 12;
+			  timeSuffix = "pm";
+			}
+			return (timeHours + ":" + zeroPadNumber(time.getMinutes()) + " " + timeSuffix);
+		}
+		function getDateText(date) {
+			return (getDayText(date.getDay()) + " " + getMonthText(date.getMonth()) + " " + getDateNumberText(date.getDate()));
+		}
+		function getDayText(dayNum) {
+		  const dayArray = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+		  
+		  if (dayNum >= 0 && dayNum < 7)
+			return dayArray[dayNum];
+		  else
+			throw new TypeError("Invalid day number");
+		}
+		function getMonthText(monthNum) {
+		  const monthArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+		  
+		  if (monthNum >= 0 && monthNum < 12)
+			return monthArray[monthNum];
+		  else
+			throw new TypeError("Invalid month number");
+		}
+		function getDateNumberText(dateNumber) {
+			let dateNumberSuffix = "th";
+			const onesDigit = dateNumber % 10;
+			if (onesDigit == 1 && dateNumber != 11)
+				dateNumberSuffix = "st";
+			else if (onesDigit == 2 && dateNumber != 12)
+				dateNumberSuffix = "nd";
+			else if (onesDigit == 3 && dateNumber != 13)
+				dateNumberSuffix = "rd";
+			return dateNumber + dateNumberSuffix;
+		}
+		function zeroPadNumber(num) {
+			let numText = num;
+			if (num < 10)
+				numText = "0" + numText;
+			return numText;
+		}
+	</script>
+	<div id="HeaderTitle">IMAX SHOWTIMES</div>
+	<div id="CurrentTime"></div>
+	<div id="ShowtimeContainer"></div>
+</body>
+</html>
