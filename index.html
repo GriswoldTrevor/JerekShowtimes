@@ -10,50 +10,119 @@
 
 	<style type="text/css">
 		.filmPoster {
-			height: 500px;
-			display: block;
-			margin: auto;
+			height: 100%;
+			text-align: center;
 		}
 		.filmTitle {
-			visibility: hidden;
+			height: 100%;
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+			text-align: center;
+			font-weight: bold;
+			font-size: 2em;
+			line-height: 50px;
+		}
+		.filmPoster img {
+			max-height: 100%;
+			max-width: 100%;
+			width:auto;
+			height:auto;
 		}
 		.filmShowtimes {
 			text-align: center;
 			font-weight: bold;
 			font-size: 1.5em;
+			display: flex;
+			justify-content: center;
+			flex-direction: row;
+			flex-wrap: wrap;
 		}
-		.filmContainer {
-			float: left;
-			padding: 0px 10px 10px 0px;
-			width: 400px;
+		.showtime {
+			text-align: center;
+			padding: 0px 10px 10px 10px;
 		}
 		
-		#HeaderTitle {
+		#CurrentTime, #PosterContainer, #ShowtimeContainer {
+			border-color: #ffffff;
+			border-style: solid;
+			border-width: 2px 0px 0px 0px;
+		}
+		
+		#ImaxBanner {
+			height: 10%;
+			
 			font-size: 5em;
 			font-weight: bold;
+			background: #184896;
+			padding-left: 5px;
 		}
 		#CurrentTime {
+			height: 6%;
+			
 			font-size: 2em;
+			font-weight: bold;
+			background: #0443b5;
+			text-align: right;
+			
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding-right: 5px;
+		}
+		#PosterContainer {
+			height: 64%;
+			
+			background: #030b0f;
+			display: flex;
+			justify-content: space-between;
+			flex-direction: row;
+		}
+		#ShowtimeContainer {
+			height: 10%;
+			
+			background: #0443b5;
+			display: flex;
+			justify-content: space-between;
+			flex-direction: row;
+		}
+		#MessageContainer {
+			height: 10%;
+			
+			background: #0443b5;
 		}
 		
 		body {
-			background-color: darkblue;
+			font-family: verdana !important;
+			background-color: #000000;
 			color: white;
+			
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+		}
+		html, body {
+			margin: 0;
+			height: 100%;
 		}
 	</style>
 </head>
 
 <body>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="https://apis.google.com/js/api.js"></script>
 	<script type="text/javascript">
 		$( document ).ready(function() {
-			$("#CurrentTime").text(getDateTimeText());
+			setInterval(updateDateTime, 1000);
 			parseShowtimeData();
 		});
 		
+		function updateDateTime(){
+			$("#CurrentTime").text(getDateTimeText());
+		}
+		
 		function parseShowtimeData(){
-			const apiKey = 'AIzaSyDIvvUDqPSfZf3Z35d5QI3HUVYPgaLXzLQ';
+			const apiKey = 'AIzaSyDVfpHsurpws29nVctHr9zugAbaoh_TM1w';
 			const spreadsheetId = '1yeaCu-prtDJVmNmYojFmPCZDtaDi8g-QrZP4MIPINbU';
 			const filmRange = 'Films!A%3AC';
 			const showtimeRange = 'Showtimes!A%3AD';
@@ -64,40 +133,52 @@
 			$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+filmRange+'?'+renderOptions+'&key='+apiKey, function(data) {
 				let filmData = data.values.slice(1);
 				for (let i = 0; i < filmData.length; i++) {
-					const filmCode = filmData[i][0];
-					parsedShowtimeData[filmCode] = {
-						name: filmData[i][1],
-						posterURL: filmData[i][2],
-						showtimes: []
-					};
+					if (filmData[i].length > 0) {
+						const filmCode = (filmData[i][0] || "").toUpperCase();
+						
+						parsedShowtimeData[filmCode] = {
+							name: filmData[i][1] || "",
+							posterURL: filmData[i][2],
+							showtimes: []
+						};
+					}
 				}
-				
+				console.log(parsedShowtimeData);
 				$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+showtimeRange+'?'+renderOptions+'&key='+apiKey, function(data) {
 					let showtimeData = data.values.slice(1);
 					for (let i = 0; i < showtimeData.length; i++) {
-						const startDate = new Date(showtimeData[i][2]);
-						const endDate = new Date(showtimeData[i][3]);
-						const today = new Date();
-						
-						if (startDate <= today && endDate >= today) {
-							const filmCode = showtimeData[i][0];
-							parsedShowtimeData[filmCode].showtimes.push(showtimeData[i][1]);
+						if (showtimeData[i].length === 4) {
+							const startDate = new Date(showtimeData[i][2]);
+							const endDate = new Date(showtimeData[i][3]);
+							const today = new Date();
+							
+							if (startDate <= today && endDate >= today) {
+								const filmCode = showtimeData[i][0].toUpperCase();
+								if (parsedShowtimeData[filmCode] !== null && parsedShowtimeData[filmCode] !== undefined)
+									parsedShowtimeData[filmCode].showtimes.push(showtimeData[i][1]);
+							}
 						}
 					}
 					console.log(parsedShowtimeData);
 					
+					let posterContainer = $("#PosterContainer");
 					let showtimeContainer = $("#ShowtimeContainer");
+					
+					let filmCount = 0;
 					for (let p in parsedShowtimeData) {
 						if (parsedShowtimeData.hasOwnProperty(p)) {
 							if (parsedShowtimeData[p].showtimes.length > 0) {
-								showtimeContainer.append("<div class='filmContainer'>"+
-									"<div class='filmTitle'>"+parsedShowtimeData[p].name+"</div>"+
-									"<div class='filmPoster'><img class='filmPoster' src='"+parsedShowtimeData[p].posterURL+"'></div>"+
-									"<div class='filmShowtimes'>"+sortByTime(parsedShowtimeData[p].showtimes).join('&nbsp;&nbsp;&nbsp;')+"</div>"+
-									"</div>");
+								filmCount++;
+								if (parsedShowtimeData[p].posterURL !== null && parsedShowtimeData[p].posterURL !== undefined)
+									posterContainer.append("<div class='filmPoster'><img src='"+parsedShowtimeData[p].posterURL+"' alt='"+parsedShowtimeData[p].name+"'></div>");
+								else
+									posterContainer.append("<div class='filmTitle'>"+parsedShowtimeData[p].name+"</div>");
+									
+								showtimeContainer.append("<div class='filmShowtimes'><div class='showtime'>"+sortByTime(parsedShowtimeData[p].showtimes).join("</div><div class='showtime'>")+"</div></div>");
 							}
 						}
 					}
+					showtimeContainer.append('<style type="text/css">.filmPoster, .filmShowtimes, .filmTitle { width: '+Math.floor(99.9/filmCount)+'%; }</style>');
 				});
 			});
 		}
@@ -158,8 +239,10 @@
 			return numText;
 		}
 	</script>
-	<div id="HeaderTitle">IMAX SHOWTIMES</div>
+	<div id="ImaxBanner">IMAX SHOWTIMES</div>
 	<div id="CurrentTime"></div>
+	<div id="PosterContainer"></div>
 	<div id="ShowtimeContainer"></div>
+	<div id="MessageContainer"></div>
 </body>
 </html>
