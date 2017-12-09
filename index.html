@@ -54,27 +54,21 @@
 			text-align: center;
 			padding: 10px 10px 10px 10px;
 		}
-		
-		.marquee {
-		  overflow: hidden;
-		  position: relative;
-		}
-		.marquee div {
-		  display: block;
-		  width: 200%;
-
-		  position: absolute;
-		  overflow: hidden;
-
-		  animation: marquee 20s linear infinite;
-		}
-		.marquee span {
-		  float: left;
-		  width: 50%;
-		}
 		@keyframes marquee {
-		  0% { left: 0; }
-		  100% { left: -100%; }
+			from {
+				transform: translateX(100%);
+			}
+			to {
+				transform: translateX(-100%);
+			}
+		}
+		@keyframes marquee2 {
+			from {
+				transform: translateX(0%);
+			}
+			to {
+				transform: translateX(-200%);
+			}
 		}
 		
 		#CurrentTime, #PosterContainer, #ShowtimeContainer {
@@ -140,6 +134,8 @@
 			
 			font-size: 2em;
 			font-weight: bold;
+			overflow: hidden;
+			white-space: nowrap;
 			
 			background: #0443b5;
 		}
@@ -247,12 +243,25 @@
 			$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+settingsRange+'?'+renderOptions+'&key='+apiKey, function(data) {
 				let settingsData = data.values;
 				let messages = [];
+				const separator = "&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;";
 				for (let i = 0; i < settingsData.length; i++) {
 					if (settingsData[i].length > 0)
 						messages.push(settingsData[i][0]);
 				}
-				const fullMessage = messages.join("&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;");
-				$("#MessageContainer").append("<div><span>"+fullMessage+"</span><span>"+fullMessage+"</span></div>");
+				let fullMessage = separator + messages.join(separator);
+				fullMessage = fullMessage + fullMessage + fullMessage + fullMessage;
+				fullMessage = fullMessage + fullMessage;
+				fullMessage = fullMessage + fullMessage;
+				fullMessage = fullMessage + fullMessage;
+				fullMessage = fullMessage + fullMessage;
+				
+				//px to em = 1/12, 2 em font size
+				let marqueeDuration = fullMessage.length/($(window).width()/12/2) * 15; //30 seconds for a full screen scroll
+				let marqueeCss = "#MessageContainer div:nth-child(1) { display: inline-block; animation: marquee "+marqueeDuration+"s linear infinite; animation-delay: -"+marqueeDuration/2+"s; }" +
+					"#MessageContainer div:nth-child(2) { display: inline-block; animation: marquee2 "+marqueeDuration+"s linear infinite; }";
+				$("#MessageContainer").append("<div>"+fullMessage+"</div><div>"+fullMessage+"</div>");
+				$("#MessageContainer").append("<style>"+marqueeCss+"</style>");
+				
 			});
 		}
 		
@@ -320,6 +329,6 @@
 	<div id="CurrentTime"></div>
 	<div id="PosterContainer"></div>
 	<div id="ShowtimeContainer"></div>
-	<div id="MessageContainer" class="marquee"></div>
+	<div id="MessageContainer"></div>
 </body>
 </html>
