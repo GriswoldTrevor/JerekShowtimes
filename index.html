@@ -249,11 +249,7 @@
 						messages.push(settingsData[i][0]);
 				}
 				let fullMessage = separator + messages.join(separator);
-				fullMessage = fullMessage + fullMessage + fullMessage + fullMessage;
-				fullMessage = fullMessage + fullMessage;
-				fullMessage = fullMessage + fullMessage;
-				fullMessage = fullMessage + fullMessage;
-				fullMessage = fullMessage + fullMessage;
+				fullMessage = fullMessage + fullMessage + fullMessage + fullMessage; //Ensure the message fills the screen
 				
 				//px to em = 1/12, 2 em font size
 				let marqueeDuration = fullMessage.length/($(window).width()/12/2) * 15; //30 seconds for a full screen scroll
