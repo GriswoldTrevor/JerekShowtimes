@@ -47,28 +47,12 @@
 			font-size: 2em;
 			display: flex;
 			justify-content: center;
-			flex-direction: row;
+			flex-direction: column;
 			flex-wrap: wrap;
 		}
 		.showtime {
 			text-align: center;
 			padding: 10px 10px 10px 10px;
-		}
-		@keyframes marquee {
-			from {
-				transform: translateX(100%);
-			}
-			to {
-				transform: translateX(-100%);
-			}
-		}
-		@keyframes marquee2 {
-			from {
-				transform: translateX(0%);
-			}
-			to {
-				transform: translateX(-200%);
-			}
 		}
 		
 		#CurrentTime, #PosterContainer, #ShowtimeContainer {
@@ -95,10 +79,8 @@
 			position: relative;
 		}
 		#ImaxBanner img {
-			max-height: 100%;
-			max-width: 100%;
 			width:auto;
-			height:auto;
+			height:100%;
 		}
 		#CurrentTime {
 			height: 6%;
@@ -121,19 +103,11 @@
 			flex-direction: row;
 		}
 		#ShowtimeContainer {
-			height: 14%;
+			height: 20%;
 			
 			display: flex;
 			justify-content: space-between;
 			flex-direction: row;
-		}
-		#MessageContainer {
-			height: 6%;
-			
-			font-size: 2em;
-			font-weight: bold;
-			overflow: hidden;
-			white-space: nowrap;
 		}
 		
 		body {
@@ -165,7 +139,7 @@
 			$("#CurrentTime").text(getDateTimeText());
 			
 			let today = new Date();
-			today.setHours(0, 0, 0, 0);
+			today.setMinutes(0, 0, 0);
 			if (lastLoadedShowtimeDate === null || lastLoadedShowtimeDate < today)
 			{
 				lastLoadedShowtimeDate = today;
@@ -236,25 +210,6 @@
 					showtimeContainer.append('<style type="text/css">.filmPoster, .filmShowtimes, .filmTitle { width: '+Math.floor(99.9/filmCount)+'%; }</style>');
 				});
 			});
-			$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+settingsRange+'?'+renderOptions+'&key='+apiKey, function(data) {
-				let settingsData = data.values;
-				let messages = [];
-				const separator = "&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;";
-				for (let i = 0; i < settingsData.length; i++) {
-					if (settingsData[i].length > 0)
-						messages.push(settingsData[i][0]);
-				}
-				let fullMessage = separator + messages.join(separator);
-				fullMessage = fullMessage + fullMessage + fullMessage + fullMessage; //Ensure the message fills the screen
-				
-				//px to em = 1/12, 2 em font size
-				let marqueeDuration = fullMessage.length/($(window).width()/12/2) * 15; //30 seconds for a full screen scroll
-				let marqueeCss = "#MessageContainer div:nth-child(1) { display: inline-block; animation: marquee "+marqueeDuration+"s linear infinite; animation-delay: -"+marqueeDuration/2+"s; }" +
-					"#MessageContainer div:nth-child(2) { display: inline-block; animation: marquee2 "+marqueeDuration+"s linear infinite; }";
-				$("#MessageContainer").append("<div>"+fullMessage+"</div><div>"+fullMessage+"</div>");
-				$("#MessageContainer").append("<style>"+marqueeCss+"</style>");
-				
-			});
 		}
 		
 		function sortByTime(values) {
@@ -321,6 +276,5 @@
 	<div id="CurrentTime"></div>
 	<div id="PosterContainer"></div>
 	<div id="ShowtimeContainer"></div>
-	<div id="MessageContainer"></div>
 </body>
 </html>
