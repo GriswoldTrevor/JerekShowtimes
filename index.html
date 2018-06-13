@@ -9,6 +9,21 @@
 	<meta name="author" content="Trevor Griswold">
 
 	<style type="text/css">
+		@media only screen and (min-width: 1900px) and (max-width: 2499px) {
+			.filmTitle, .filmShowtimes, #ImaxBanner, #CurrentTime {
+				font-size: 3em !important;
+			}
+		}
+		@media only screen and (min-width: 2500px) and (max-width: 2999px) {
+			.filmTitle, .filmShowtimes, #ImaxBanner, #CurrentTime  {
+				font-size: 5em !important;
+			}
+		}
+		@media only screen and (min-width: 3000px) {
+			.filmTitle, .filmShowtimes, #ImaxBanner, #CurrentTime  {
+				font-size: 6em !important;
+			}
+		}
 		.filmPoster {
 			height: 100%;
 			text-align: center;
@@ -81,6 +96,8 @@
 		#ImaxBanner img {
 			width:auto;
 			height:100%;
+			max-width: 100%;
+			max-height: 100%;
 		}
 		#CurrentTime {
 			height: 6%;
