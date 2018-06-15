@@ -10,18 +10,27 @@
 
 	<style type="text/css">
 		@media only screen and (min-width: 1900px) and (max-width: 2499px) {
-			.filmTitle, .filmShowtimes, #ImaxBanner, #CurrentTime {
+			#ImaxBanner, #CurrentTime, .filmShowtimes  {
+				font-size: 3em !important;
+			}
+			.filmPoster  {
 				font-size: 3em !important;
 			}
 		}
 		@media only screen and (min-width: 2500px) and (max-width: 2999px) {
-			.filmTitle, .filmShowtimes, #ImaxBanner, #CurrentTime  {
+			#ImaxBanner, #CurrentTime, .filmShowtimes  {
+				font-size: 5em !important;
+			}
+			.filmPoster  {
 				font-size: 5em !important;
 			}
 		}
 		@media only screen and (min-width: 3000px) {
-			.filmTitle, .filmShowtimes, #ImaxBanner, #CurrentTime  {
+			#ImaxBanner, #CurrentTime, .filmShowtimes, .filmPoster {
 				font-size: 6em !important;
+			}
+			.filmShowtimes {
+				font-size: 7em !important;
 			}
 		}
 		.filmPoster {
@@ -29,19 +38,7 @@
 			text-align: center;
 			font-weight: bold;
 			font-size: 2em;
-			line-height: 50px;
 			position: relative;
-		}
-		.filmTitle {
-			height: 100%;
-			text-align: center;
-			display: flex;
-			justify-content: center;
-			flex-direction: column;
-			text-align: center;
-			font-weight: bold;
-			font-size: 2em;
-			line-height: 50px;
 		}
 		.filmPoster img {
 			top: 0;
@@ -61,9 +58,19 @@
 			font-weight: bold;
 			font-size: 2em;
 			display: flex;
-			justify-content: center;
+			justify-content: flex-start;
 			flex-direction: column;
 			flex-wrap: wrap;
+		}
+		.filmShowtimes {
+			border-style: solid;
+			border-color: white;
+			border-collapse: collapse;
+			border-width: 0px 0px 0px 0px;
+		}
+
+		.filmShowtimes:not(:last-child) {
+			border-right-width: 5px;
 		}
 		.showtime {
 			text-align: center;
@@ -73,7 +80,8 @@
 		#CurrentTime, #PosterContainer, #ShowtimeContainer {
 			border-color: #ffffff;
 			border-style: solid;
-			border-width: 2px 0px 0px 0px;
+			border-width: 5px 0px 0px 0px;
+			border-collapse: collapse;
 		}
 		
 		#HeaderContainer {
@@ -112,7 +120,7 @@
 			padding-right: 5px;
 		}
 		#PosterContainer {
-			height: 62%;
+			height: 55%;
 			
 			background: #030b0f;
 			display: flex;
@@ -120,7 +128,7 @@
 			flex-direction: row;
 		}
 		#ShowtimeContainer {
-			height: 20%;
+			height: 27%;
 			
 			display: flex;
 			justify-content: space-between;
@@ -174,7 +182,6 @@
 			
 			$("#PosterContainer").empty();
 			$("#ShowtimeContainer").empty();
-			$("#MessageContainer").empty();
 			
 			let parsedShowtimeData = {};
 			const dayNumber = today.getDay();
@@ -224,7 +231,7 @@
 							}
 						}
 					}
-					showtimeContainer.append('<style type="text/css">.filmPoster, .filmShowtimes, .filmTitle { width: '+Math.floor(99.9/filmCount)+'%; }</style>');
+					$("#HeaderContainer").append('<style type="text/css">.filmPoster, .filmShowtimes, .filmTitle, .filmType { width: '+Math.floor(99.9/filmCount)+'%; }</style>');
 				});
 			});
 		}
