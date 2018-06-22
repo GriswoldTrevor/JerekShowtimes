@@ -1,0 +1,275 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>IMAX Prices</title>
+	<meta name="description" content="Film Prices">
+	<meta name="author" content="Trevor Griswold">
+
+	<style type="text/css">
+		@media only screen and (max-width: 1499px) {
+			body {
+				font-size: 2em;
+			}
+			#HeaderMessage, #PricesContainer {
+				border-top-width: 2px !important;
+			}
+		}
+		@media only screen and (min-width: 1500px) and (max-width: 1999px) {
+			body {
+				font-size: 2.5em;
+			}
+			#HeaderMessage, #PricesContainer {
+				border-top-width: 2px !important;
+			}
+		}
+		@media only screen and (min-width: 2000px) and (max-width: 2499px) {
+			body {
+				font-size: 3em;
+			}
+			#HeaderMessage, #PricesContainer {
+				border-top-width: 3px !important;
+			}
+		}
+		@media only screen and (min-width: 2500px) and (max-width: 2999px) {
+			body {
+				font-size: 3.5em;
+			}
+			#HeaderMessage, #PricesContainer {
+				border-top-width: 4px !important;
+			}
+		}
+		@media only screen and (min-width: 3000px) and (max-width: 3499px) {
+			body {
+				font-size: 4.5em;
+			}
+			#HeaderMessage, #PricesContainer {
+				border-top-width: 5px !important;
+			}
+		}
+		@media only screen  and (min-width: 3500px)  {
+			body {
+				font-size: 5em;
+			}
+			#HeaderMessage, #PricesContainer {
+				border-top-width: 4px !important;
+			}
+		}
+		
+		#HeaderContainer {
+			font-size: 2.5em !important;
+		}
+		#HeaderMessage, #PricesContainer {
+			font-size: 1em !important;
+		}
+		.PriceSublabel {
+			font-size: 0.5em;
+		}
+		.PriceSubcategory {
+			font-size: 0.75em;
+		}
+		
+		#HeaderMessage, #PricesContainer {
+			border-color: #ffffff;
+			border-style: solid;
+			border-collapse: collapse;
+			border-width: 0px 0px 0px 0px;
+		}
+		#HeaderContainer {
+			height: 12%;
+			background: #184896;
+			
+			font-weight: bold;
+			text-align: left;
+			
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding-left: 0.25em;
+		}
+		#HeaderMessage {
+			height: 6%;
+			
+			font-weight: bold;
+			text-align: left;
+			
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding-left: 0.5em;
+		}
+		#PricesContainer {
+			height: 82%;
+			font-weight: bold;
+			
+			background-image: url('TicketingTestBG.png');
+			background-size: 100% 100%;
+			background-color: #1C76C9;
+			display: flex;
+			justify-content: space-around;
+			flex-direction: column;
+		}
+		.PriceRow {
+			background-color: rgba(0, 0, 0, 0.15);
+			display: flex;
+			justify-content: space-between;
+			flex-direction: row;
+			padding: 0.25em 0.5em 0.25em 0.5em;
+		}
+		.PriceLabel {
+			width: 25%;
+			text-align: left;
+		}
+		.PriceCategory {
+			width: 15%;
+			text-align: center;
+			display: flex;
+			justify-content: space-around;
+			flex-direction: column;
+		}
+		
+		body {
+			font-family: verdana !important;
+			background: linear-gradient(to right, #0546B5, #1C76C9);
+			color: white;
+			
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+		}
+		html, body {
+			margin: 0;
+			height: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$( document ).ready(function() {
+			setInterval(updateData, 1000);
+		});
+		
+		var lastLoadedShowtimeDate = null;
+		
+		function updateData(){
+			let today = new Date();
+			today.setMinutes(0, 0, 0);
+			if (lastLoadedShowtimeDate === null || lastLoadedShowtimeDate < today)
+			{
+				lastLoadedShowtimeDate = today;
+				parsePriceData(today);
+			}
+		}
+		
+		function parsePriceData(today){
+			const apiKey = 'AIzaSyCrkLGinkb81wYSHynyUAelArQnY2uHC_Q';
+			const spreadsheetId = '1F5BzaAmANypyfKyoBZCzpeOgRfrivx9UwWeDLhvQx7U';
+			const filmRange = 'Films!A2%3AC';
+			const showtimeRange = 'Showtimes!A2%3AK';
+			const settingsRange = 'Settings!A2:A';
+			const renderOptions = 'dateTimeRenderOption=FORMATTED_STRING&majorDimension=ROWS&valueRenderOption=UNFORMATTED_VALUE';
+			
+			//$("#PricesContainer").empty();
+			//$("#HeaderMessage").text('');
+			
+			let parsedShowtimeData = {};
+			const dayNumber = today.getDay();
+			
+		}
+		
+	</script>
+	<div id="HeaderContainer">
+		GENERAL ADMISSION
+	</div>
+	<div id="HeaderMessage">
+		ALL SALES ARE SUBJECT TO A 10% SALES TAX
+	</div>
+	<div id="PricesContainer">
+		<div class="PriceRow">
+			<div class="PriceLabel">
+				&nbsp;
+			</div>
+			<div class="PriceCategory">
+				UNDER
+				<div class="PriceSubcategory">2</div>
+			</div>
+			<div class="PriceCategory">
+				KID
+				<div class="PriceSubcategory">2-12</div>
+			</div>
+			<div class="PriceCategory">
+				ADULT
+				<div class="PriceSubcategory">13-64</div>
+			</div>
+			<div class="PriceCategory">
+				SENIOR
+				<div class="PriceSubcategory">65+</div>
+			</div>
+			<div class="PriceCategory">
+				MEMBERS
+				<div class="PriceSubcategory">&nbsp;</div>
+			</div>
+		</div>
+		<div class="PriceRow">
+			<div class="PriceLabel">
+				Adventure Halls
+			</div>
+			<div class="PriceCategory">FREE</div>
+			<div class="PriceCategory">$9</div>
+			<div class="PriceCategory">$13</div>
+			<div class="PriceCategory">$12</div>
+			<div class="PriceCategory">FREE</div>
+		</div>
+		<div class="PriceRow">
+			<div class="PriceLabel">
+				IMAX Film
+				<div class="PriceSublabel">Documentary (45-60 minutes)</div>
+			</div>
+			<div class="PriceCategory">FREE</div>
+			<div class="PriceCategory">$8</div>
+			<div class="PriceCategory">$9</div>
+			<div class="PriceCategory">$9</div>
+			<div class="PriceCategory">
+				<div class="PriceSubcategory">$6 Child</div>
+				<div class="PriceSubcategory">$7 Adult</div>
+			</div>
+		</div>
+		<div class="PriceRow">
+			<div class="PriceLabel">
+				IMAX Film Combo
+				<div class="PriceSublabel">IMAX Documentary and Adventure Halls</div>
+			</div>
+			<div class="PriceCategory">FREE</div>
+			<div class="PriceCategory">$14</div>
+			<div class="PriceCategory">$18</div>
+			<div class="PriceCategory">$16</div>
+			<div class="PriceCategory">&nbsp;</div>
+		</div>
+		<div class="PriceRow">
+			<div class="PriceLabel">
+				IMAX Feature Film
+				<div class="PriceSublabel">Feature Length Movie (90+ Minutes)</div>
+			</div>
+			<div class="PriceCategory">FREE</div>
+			<div class="PriceCategory">$12</div>
+			<div class="PriceCategory">$15</div>
+			<div class="PriceCategory">$12</div>
+			<div class="PriceCategory">
+				<div class="PriceSubcategory">$11 Child</div>
+				<div class="PriceSubcategory">$14 Adult</div>
+			</div>
+		</div>
+		<div class="PriceRow">
+			<div class="PriceLabel">
+				&nbsp;
+			</div>
+			PARKING $5
+			<div class="PriceCategory">FREE</div>
+		</div>
+	</div>
+</body>
+</html>

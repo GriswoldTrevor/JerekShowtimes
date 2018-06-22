@@ -9,38 +9,101 @@
 	<meta name="author" content="Trevor Griswold">
 
 	<style type="text/css">
-		@media only screen and (min-width: 1900px) and (max-width: 2499px) {
-			#ImaxBanner, #CurrentTime, .filmShowtimes  {
-				font-size: 3em !important;
+		@media only screen and (max-width: 1499px) {
+			body {
+				font-size: 2em;
 			}
-			.filmPoster  {
-				font-size: 3em !important;
+			#CurrentTime, #PosterContainer, #ShowtimeContainer {
+				border-top-width: 1px !important;
+			}
+			.FilmShowtimes:not(:last-child) {
+				border-right-width: 1px !important;
+			}
+		}
+		@media only screen and (min-width: 1500px) and (max-width: 1999px) {
+			body {
+				font-size: 2.5em;
+			}
+			#CurrentTime, #PosterContainer, #ShowtimeContainer {
+				border-top-width: 2px !important;
+			}
+			.FilmShowtimes:not(:last-child) {
+				border-right-width: 2px !important;
+			}
+		}
+		@media only screen and (min-width: 2000px) and (max-width: 2499px) {
+			body {
+				font-size: 3em;
+			}
+			#CurrentTime, #PosterContainer, #ShowtimeContainer {
+				border-top-width: 3px !important;
+			}
+			.FilmShowtimes:not(:last-child) {
+				border-right-width: 3px !important;
 			}
 		}
 		@media only screen and (min-width: 2500px) and (max-width: 2999px) {
-			#ImaxBanner, #CurrentTime, .filmShowtimes  {
-				font-size: 5em !important;
+			body {
+				font-size: 3.5em;
 			}
-			.filmPoster  {
-				font-size: 5em !important;
+			#CurrentTime, #PosterContainer, #ShowtimeContainer {
+				border-top-width: 4px !important;
 			}
-		}
-		@media only screen and (min-width: 3000px) {
-			#ImaxBanner, #CurrentTime, .filmShowtimes, .filmPoster {
-				font-size: 6em !important;
-			}
-			.filmShowtimes {
-				font-size: 7em !important;
+			.FilmShowtimes:not(:last-child) {
+				border-right-width: 4px !important;
 			}
 		}
-		.filmPoster {
+		@media only screen and (min-width: 3000px) and (max-width: 3499px) {
+			body {
+				font-size: 4.5em;
+			}
+			#CurrentTime, #PosterContainer, #ShowtimeContainer {
+				border-top-width: 5px !important;
+			}
+			.FilmShowtimes:not(:last-child) {
+				border-right-width: 5px !important;
+			}
+		}
+		@media only screen  and (min-width: 3500px)  {
+			body {
+				font-size: 5em;
+			}
+			#CurrentTime, #PosterContainer, #ShowtimeContainer {
+				border-top-width: 6px !important;
+			}
+			.FilmShowtimes:not(:last-child) {
+				border-right-width: 6px !important;
+			}
+		}
+		
+		#HeaderContainer {
+			font-size: 2.5em !important;
+		}
+		.FilmPoster, #CurrentTime {
+			font-size: 1em !important;
+		}
+		.FilmShowtimes {
+			font-size: 0.85em !important;
+		}
+		
+		#HeaderTitle {
+			display: flex;
+			justify-content: start;
+			flex-direction: row;
+		}
+		.RegisteredTM {
+			font-size: 0.25em;
+			padding-top: 0.9em;
+			padding-right: 1em;
+		}
+		
+		.FilmPoster {
 			height: 100%;
 			text-align: center;
 			font-weight: bold;
-			font-size: 2em;
 			position: relative;
 		}
-		.filmPoster img {
+		.FilmPoster img {
 			top: 0;
 			bottom: 0;
 			left: 0;
@@ -53,26 +116,20 @@
 			width:auto;
 			height:auto;
 		}
-		.filmShowtimes {
+		.FilmShowtimes {
 			text-align: center;
 			font-weight: bold;
-			font-size: 2em;
 			display: flex;
 			justify-content: flex-start;
 			flex-direction: column;
 			flex-wrap: wrap;
-		}
-		.filmShowtimes {
+			
+			border-width: 0px 0px 0px 0px;
 			border-style: solid;
 			border-color: white;
 			border-collapse: collapse;
-			border-width: 0px 0px 0px 0px;
 		}
-
-		.filmShowtimes:not(:last-child) {
-			border-right-width: 5px;
-		}
-		.showtime {
+		.Showtime {
 			text-align: center;
 			padding: 10px 10px 10px 10px;
 		}
@@ -80,44 +137,31 @@
 		#CurrentTime, #PosterContainer, #ShowtimeContainer {
 			border-color: #ffffff;
 			border-style: solid;
-			border-width: 5px 0px 0px 0px;
 			border-collapse: collapse;
+			border-width: 0px 0px 0px 0px;
 		}
-		
 		#HeaderContainer {
 			height: 12%;
 			background: #184896;
 			
-			display: flex;
-			flex-direction: row;
-			justify-content: left;
-			padding-left: 5px;
-		}
-		#ImaxBanner {
-			height: 100%;
-			width: 100%;
-			font-size: 5em;
 			font-weight: bold;
 			text-align: left;
-			position: relative;
-		}
-		#ImaxBanner img {
-			width:auto;
-			height:100%;
-			max-width: 100%;
-			max-height: 100%;
+			
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding-left: 0.25em;
 		}
 		#CurrentTime {
 			height: 6%;
 			
-			font-size: 2em;
 			font-weight: bold;
 			text-align: right;
 			
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			padding-right: 5px;
+			padding-right: 0.5em;
 		}
 		#PosterContainer {
 			height: 55%;
@@ -137,7 +181,7 @@
 		
 		body {
 			font-family: verdana !important;
-			 background: linear-gradient(to right, #0546B5, #1C76C9);
+			background: linear-gradient(to right, #0546B5, #1C76C9);
 			color: white;
 			
 			display: flex;
@@ -176,7 +220,7 @@
 			const apiKey = 'AIzaSyCrkLGinkb81wYSHynyUAelArQnY2uHC_Q';
 			const spreadsheetId = '1F5BzaAmANypyfKyoBZCzpeOgRfrivx9UwWeDLhvQx7U';
 			const filmRange = 'Films!A2%3AC';
-			const showtimeRange = 'Showtimes!A2%3AK';
+			const ShowtimeRange = 'Showtimes!A2%3AK';
 			const settingsRange = 'Settings!A2:A';
 			const renderOptions = 'dateTimeRenderOption=FORMATTED_STRING&majorDimension=ROWS&valueRenderOption=UNFORMATTED_VALUE';
 			
@@ -195,43 +239,43 @@
 						parsedShowtimeData[filmCode] = {
 							name: filmData[i][1] || "",
 							posterURL: filmData[i][2],
-							showtimes: []
+							Showtimes: []
 						};
 					}
 				}
-				$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+showtimeRange+'?'+renderOptions+'&key='+apiKey, function(data) {
-					let showtimeData = data.values;
-					for (let i = 0; i < showtimeData.length; i++) {
-						if (showtimeData[i].length === 11) {
-							const startDate = new Date(showtimeData[i][2]);
-							const endDate = new Date(showtimeData[i][3]);
+				$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+ShowtimeRange+'?'+renderOptions+'&key='+apiKey, function(data) {
+					let ShowtimeData = data.values;
+					for (let i = 0; i < ShowtimeData.length; i++) {
+						if (ShowtimeData[i].length === 11) {
+							const startDate = new Date(ShowtimeData[i][2]);
+							const endDate = new Date(ShowtimeData[i][3]);
 							
-							if (showtimeData[i][4+dayNumber].toUpperCase() === "Y" && startDate.getTime() <= today.getTime() && endDate.getTime() >= today.getTime()) {
-								const filmCode = showtimeData[i][0].toUpperCase();
+							if (ShowtimeData[i][4+dayNumber].toUpperCase() === "Y" && startDate.getTime() <= today.getTime() && endDate.getTime() >= today.getTime()) {
+								const filmCode = ShowtimeData[i][0].toUpperCase();
 								if (parsedShowtimeData[filmCode] !== null && parsedShowtimeData[filmCode] !== undefined)
-									parsedShowtimeData[filmCode].showtimes.push(showtimeData[i][1]);
+									parsedShowtimeData[filmCode].Showtimes.push(ShowtimeData[i][1]);
 							}
 						}
 					}
 					
 					let posterContainer = $("#PosterContainer");
-					let showtimeContainer = $("#ShowtimeContainer");
+					let ShowtimeContainer = $("#ShowtimeContainer");
 					
 					let filmCount = 0;
 					for (let p in parsedShowtimeData) {
 						if (parsedShowtimeData.hasOwnProperty(p)) {
-							if (parsedShowtimeData[p].showtimes.length > 0) {
+							if (parsedShowtimeData[p].Showtimes.length > 0) {
 								filmCount++;
 								if (parsedShowtimeData[p].posterURL !== null && parsedShowtimeData[p].posterURL !== undefined)
-									posterContainer.append("<div class='filmPoster'><img src='"+parsedShowtimeData[p].posterURL+"' alt='"+parsedShowtimeData[p].name+"'></div>");
+									posterContainer.append("<div class='FilmPoster'><img src='"+parsedShowtimeData[p].posterURL+"' alt='"+parsedShowtimeData[p].name+"'></div>");
 								else
-									posterContainer.append("<div class='filmTitle'>"+parsedShowtimeData[p].name+"</div>");
+									posterContainer.append("<div class='FilmTitle'>"+parsedShowtimeData[p].name+"</div>");
 									
-								showtimeContainer.append("<div class='filmShowtimes'><div class='showtime'>"+sortByTime(parsedShowtimeData[p].showtimes).join("</div><div class='showtime'>")+"</div></div>");
+								ShowtimeContainer.append("<div class='FilmShowtimes'><div class='Showtime'>"+sortByTime(parsedShowtimeData[p].Showtimes).join("</div><div class='Showtime'>")+"</div></div>");
 							}
 						}
 					}
-					$("#HeaderContainer").append('<style type="text/css">.filmPoster, .filmShowtimes, .filmTitle, .filmType { width: '+Math.floor(99.9/filmCount)+'%; }</style>');
+					$("#HeaderContainer").append('<style type="text/css">.FilmPoster, .FilmShowtimes, .FilmTitle { width: '+Math.floor(99.9/filmCount)+'%; }</style>');
 				});
 			});
 		}
@@ -293,8 +337,10 @@
 		}
 	</script>
 	<div id="HeaderContainer">
-		<div id="ImaxBanner">
-			<img src='https://drive.google.com/uc?id=11f4nKL4t2jV85pYgTRMUCYxTRGak5Jbt' alt='IMAX'>
+		<div id="HeaderTitle">
+			IMAX
+			<span class='RegisteredTM'>&reg;</span>
+			SHOWTIMES
 		</div>
 	</div>
 	<div id="CurrentTime"></div>
