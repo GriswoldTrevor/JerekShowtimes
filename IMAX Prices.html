@@ -79,6 +79,10 @@
 			display: flex;
 			justify-content: start;
 			flex-direction: row;
+			flex-wrap: wrap;
+		}
+		.NoWrap {
+			white-space: nowrap;
 		}
 		
 		#HeaderMessage, #PricesContainer {
@@ -114,6 +118,7 @@
 			height: 82%;
 			font-weight: bold;
 			
+			padding-top: 3%;
 			background-image: url('TicketingTestBG.png');
 			background-size: 100% 100%;
 			background-color: #1C76C9;
@@ -250,7 +255,7 @@
 		</div>
 		<div class="PriceRow">
 			<div class="PriceLabel">
-				<div class="RegisteredTMSurround">IMAX<span class='RegisteredTM'>&reg;</span>Film Combo</div>
+				<div class="RegisteredTMSurround">IMAX<span class='RegisteredTM'>&reg;</span><span class='NoWrap'>Film Combo</span></div>
 				<div class="PriceSublabel">IMAX Documentary and Adventure Halls</div>
 			</div>
 			<div class="PriceCategory">FREE</div>
@@ -261,7 +266,7 @@
 		</div>
 		<div class="PriceRow">
 			<div class="PriceLabel">
-				<div class="RegisteredTMSurround">IMAX<span class='RegisteredTM'>&reg;</span>Feature Film</div>
+				<div class="RegisteredTMSurround">IMAX<span class='RegisteredTM'>&reg;</span><span class='NoWrap'>Feature Film</span></div>
 				<div class="PriceSublabel">Feature Length Movie (90+ Minutes)</div>
 			</div>
 			<div class="PriceCategory">FREE</div>
