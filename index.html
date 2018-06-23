@@ -76,6 +76,11 @@
 			}
 		}
 		
+		@font-face {
+			font-family: Microgramma D Extended Bold;
+			src: url('Microgramma D Extended Bold.otf') format("opentype");
+		}
+		
 		#HeaderContainer {
 			font-size: 2.5em !important;
 		}
@@ -91,10 +96,16 @@
 			justify-content: start;
 			flex-direction: row;
 		}
+		
+		.IMAX {
+			font-family: Microgramma D Extended Bold;
+			font-weight: normal;
+		}
 		.RegisteredTM {
 			font-size: 0.25em;
-			padding-top: 0.65em;
+			padding-top: 1.15em;
 			padding-right: 1em;
+			font-weight: normal;
 		}
 		
 		.FilmPoster {
@@ -180,7 +191,7 @@
 		}
 		
 		body {
-			font-family: sans-serif !important;
+			font-family: verdana !important;
 			background: linear-gradient(to right, #0546B5, #1C76C9);
 			color: white;
 			
@@ -338,7 +349,7 @@
 	</script>
 	<div id="HeaderContainer">
 		<div id="HeaderTitle">
-			IMAX
+			<span class='IMAX'>IMAX</span>
 			<span class='RegisteredTM'>&reg;</span>
 			SHOWTIMES
 		</div>
