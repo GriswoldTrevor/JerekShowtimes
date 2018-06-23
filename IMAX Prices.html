@@ -9,52 +9,100 @@
 	<meta name="author" content="Trevor Griswold">
 
 	<style type="text/css">
-		@media only screen and (max-width: 799px) {
+		@media only screen and (max-width: 899px) {
 			body {
 				font-size: 1em;
-			}
-			#HeaderMessage, #PricesContainer {
-				border-top-width: 1px !important;
-			}
-		}
-		@media only screen and (min-width: 800px) and (max-width: 1599px) {
-			body {
-				font-size: 1.25em;
 			}
 			#HeaderMessage, #PricesContainer {
 				border-top-width: 2px !important;
 			}
 		}
-		@media only screen and (min-width: 1600px) and (max-width: 2399px) {
+		@media only screen and (min-width: 900px) and (max-width: 1199px) {
 			body {
-				font-size: 2em;
+				font-size: 1.3em;
 			}
 			#HeaderMessage, #PricesContainer {
 				border-top-width: 3px !important;
 			}
 		}
-		@media only screen and (min-width: 2400px) and (max-width: 3199px) {
+		@media only screen and (min-width: 1200px) and (max-width: 1499px) {
 			body {
-				font-size: 3em;
+				font-size: 1.6em;
+			}
+			#HeaderMessage, #PricesContainer {
+				border-top-width: 3px !important;
+			}
+		}
+		@media only screen and (min-width: 1500px) and (max-width: 1799px) {
+			body {
+				font-size: 2em;
 			}
 			#HeaderMessage, #PricesContainer {
 				border-top-width: 4px !important;
 			}
 		}
-		@media only screen and (min-width: 3200px) and (max-width: 3999px) {
+		@media only screen and (min-width: 1800px) and (max-width: 2099px) {
 			body {
-				font-size: 4em;
+				font-size: 2.4em;
+			}
+			#HeaderMessage, #PricesContainer {
+				border-top-width: 4px !important;
+			}
+		}
+		@media only screen and (min-width: 2100px) and (max-width: 2399px) {
+			body {
+				font-size: 2.8em;
 			}
 			#HeaderMessage, #PricesContainer {
 				border-top-width: 5px !important;
 			}
 		}
-		@media only screen and (min-width: 4000px) {
+		@media only screen and (min-width: 2400px) and (max-width: 2699px) {
 			body {
-				font-size: 5em;
+				font-size: 3.2em;
+			}
+			#HeaderMessage, #PricesContainer {
+				border-top-width: 5px !important;
+			}
+		}
+		@media only screen and (min-width: 2700px) and (max-width: 2999px) {
+			body {
+				font-size: 3.6em;
 			}
 			#HeaderMessage, #PricesContainer {
 				border-top-width: 6px !important;
+			}
+		}
+		@media only screen and (min-width: 3000px) and (max-width: 3299px) {
+			body {
+				font-size: 4em;
+			}
+			#HeaderMessage, #PricesContainer {
+				border-top-width: 6px !important;
+			}
+		}
+		@media only screen and (min-width: 3300px) and (max-width: 3599px) {
+			body {
+				font-size: 4.4em;
+			}
+			#HeaderMessage, #PricesContainer {
+				border-top-width: 7px !important;
+			}
+		}
+		@media only screen and (min-width: 3600px) and (max-width: 3899px) {
+			body {
+				font-size: 4.8em;
+			}
+			#HeaderMessage, #PricesContainer {
+				border-top-width: 7px !important;
+			}
+		}
+		@media only screen and (min-width: 3900px) {
+			body {
+				font-size: 5.2em;
+			}
+			#HeaderMessage, #PricesContainer {
+				border-top-width: 8px !important;
 			}
 		}
 		
@@ -173,6 +221,9 @@
 			flex-direction: column;
 			padding-top: 0.25em;
 			padding-bottom: 0.25em;
+		}
+		.PriceLabel, .PriceCategory, .PriceMemberCategory, .PriceParkingCategory {
+			z-index: 1;
 		}
 		
 		.PriceLabel {
