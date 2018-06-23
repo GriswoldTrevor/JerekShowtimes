@@ -58,6 +58,11 @@
 			}
 		}
 		
+		@font-face {
+			font-family: Microgramma D Extended Bold;
+			src: url('Microgramma D Extended Bold.otf') format("opentype");
+		}
+		
 		#HeaderContainer {
 			font-size: 2.5em !important;
 		}
@@ -73,10 +78,20 @@
 		.PriceSubcategory {
 			font-size: 0.75em;
 		}
+		.PriceCategory, .PriceMemberCategory, .PriceParkingCategory {
+			font-size: 1.25em;
+		}
+		
+		
 		.RegisteredTM {
 			font-size: 0.25em;
-			padding-top: 0.65em;
+			padding-top: 1em;
 			padding-right: 1em;
+			font-weight: normal;
+		}
+		.IMAX {
+			font-family: Microgramma D Extended Bold;
+			font-weight: normal;
 		}
 		.RegisteredTMSurround {
 			display: flex;
@@ -132,20 +147,32 @@
 			margin-bottom: 2%;
 		}
 		.PriceRow {
-			background-color: rgba(0, 0, 0, 0.15);
+			position: relative;
 			display: flex;
 			justify-content: space-between;
 			flex-direction: row;
-			padding: 0.25em 0em 0.25em 0.5em;
+		}
+		.PriceRowBackground {
+			display: block;
+			width:100%;
+			height:100%;
+			position:absolute;
+			background-color: rgba(0, 0, 0, 0.25);
+			mix-blend-mode: overlay;
 		}
 		.PriceLabel {
 			text-align: left;
+			padding-left: 0.5em;
+			padding-top: 0.25em;
+			padding-bottom: 0.25em;
 		}
 		.PriceCategory, .PriceMemberCategory, .PriceParkingCategory {
 			text-align: center;
 			display: flex;
 			justify-content: space-around;
 			flex-direction: column;
+			padding-top: 0.25em;
+			padding-bottom: 0.25em;
 		}
 		
 		.PriceLabel {
@@ -159,7 +186,7 @@
 		}
 		
 		body {
-			font-family: sans-serif !important;
+			font-family: verdana !important;
 			background: linear-gradient(to right, #0546B5, #1C76C9);
 			color: white;
 			
@@ -218,6 +245,7 @@
 	</div>
 	<div id="PricesContainer">
 		<div class="PriceRow">
+			<div class="PriceRowBackground"></div>
 			<div class="PriceLabel">
 				&nbsp;
 			</div>
@@ -243,6 +271,7 @@
 			</div>
 		</div>
 		<div class="PriceRow">
+			<div class="PriceRowBackground"></div>
 			<div class="PriceLabel">
 				Adventure Halls
 			</div>
@@ -253,8 +282,9 @@
 			<div class="PriceMemberCategory">FREE</div>
 		</div>
 		<div class="PriceRow">
+			<div class="PriceRowBackground"></div>
 			<div class="PriceLabel">
-				<div class="RegisteredTMSurround">IMAX<span class='RegisteredTM'>&reg;</span>Film</div>
+				<div class="RegisteredTMSurround"><span class="IMAX">IMAX</span><span class='RegisteredTM'>&reg;</span>Film</div>
 				<div class="PriceSublabel">Documentary (45-60 minutes)</div>
 			</div>
 			<div class="PriceCategory">FREE</div>
@@ -267,9 +297,10 @@
 			</div>
 		</div>
 		<div class="PriceRow">
+			<div class="PriceRowBackground"></div>
 			<div class="PriceLabel">
-				<div class="RegisteredTMSurround">IMAX<span class='RegisteredTM'>&reg;</span>Film Combo</div>
-				<div class="PriceSublabel">IMAX Documentary and Adventure Halls</div>
+				<div class="RegisteredTMSurround"><span class="IMAX">IMAX</span><span class='RegisteredTM'>&reg;</span>Film Combo</div>
+				<div class="PriceSublabel">Documentary and Adventure Halls</span></div>
 			</div>
 			<div class="PriceCategory">FREE</div>
 			<div class="PriceCategory">$14</div>
@@ -278,8 +309,9 @@
 			<div class="PriceMemberCategory">&nbsp;</div>
 		</div>
 		<div class="PriceRow">
+			<div class="PriceRowBackground"></div>
 			<div class="PriceLabel">
-				<div class="RegisteredTMSurround">IMAX<span class='RegisteredTM'>&reg;</span>Feature Film</div>
+				<div class="RegisteredTMSurround"><span class="IMAX">IMAX</span><span class='RegisteredTM'>&reg;</span>Feature Film</div>
 				<div class="PriceSublabel">Feature Length Movie (90+ Minutes)</div>
 			</div>
 			<div class="PriceCategory">FREE</div>
@@ -292,6 +324,7 @@
 			</div>
 		</div>
 		<div class="PriceRow">
+			<div class="PriceRowBackground"></div>
 			<div class="PriceLabel">
 				&nbsp;
 			</div>
