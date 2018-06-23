@@ -131,18 +131,26 @@
 			display: flex;
 			justify-content: space-between;
 			flex-direction: row;
-			padding: 0.25em 0.5em 0.25em 0.5em;
+			padding: 0.25em 0em 0.25em 0.5em;
 		}
 		.PriceLabel {
-			width: 25%;
 			text-align: left;
 		}
-		.PriceCategory {
-			width: 15%;
+		.PriceCategory, .PriceMemberCategory {
 			text-align: center;
 			display: flex;
 			justify-content: space-around;
 			flex-direction: column;
+		}
+		
+		.PriceLabel {
+			width: 30%;
+		}
+		.PriceCategory{
+			width: 13%;
+		}
+		.PriceMemberCategory {
+			width: 18%;
 		}
 		
 		body {
@@ -224,7 +232,7 @@
 				SENIOR
 				<div class="PriceSubcategory">65+</div>
 			</div>
-			<div class="PriceCategory">
+			<div class="PriceMemberCategory">
 				MEMBERS
 				<div class="PriceSubcategory">&nbsp;</div>
 			</div>
@@ -237,7 +245,7 @@
 			<div class="PriceCategory">$9</div>
 			<div class="PriceCategory">$13</div>
 			<div class="PriceCategory">$12</div>
-			<div class="PriceCategory">FREE</div>
+			<div class="PriceMemberCategory">FREE</div>
 		</div>
 		<div class="PriceRow">
 			<div class="PriceLabel">
@@ -248,7 +256,7 @@
 			<div class="PriceCategory">$8</div>
 			<div class="PriceCategory">$9</div>
 			<div class="PriceCategory">$9</div>
-			<div class="PriceCategory">
+			<div class="PriceMemberCategory">
 				<div class="PriceSubcategory">$6 Child</div>
 				<div class="PriceSubcategory">$7 Adult</div>
 			</div>
@@ -262,7 +270,7 @@
 			<div class="PriceCategory">$14</div>
 			<div class="PriceCategory">$18</div>
 			<div class="PriceCategory">$16</div>
-			<div class="PriceCategory">&nbsp;</div>
+			<div class="PriceMemberCategory">&nbsp;</div>
 		</div>
 		<div class="PriceRow">
 			<div class="PriceLabel">
@@ -273,7 +281,7 @@
 			<div class="PriceCategory">$12</div>
 			<div class="PriceCategory">$15</div>
 			<div class="PriceCategory">$12</div>
-			<div class="PriceCategory">
+			<div class="PriceMemberCategory">
 				<div class="PriceSubcategory">$11 Child</div>
 				<div class="PriceSubcategory">$14 Adult</div>
 			</div>
@@ -283,7 +291,7 @@
 				&nbsp;
 			</div>
 			PARKING $5
-			<div class="PriceCategory">FREE</div>
+			<div class="PriceMemberCategory">FREE</div>
 		</div>
 	</div>
 </body>
