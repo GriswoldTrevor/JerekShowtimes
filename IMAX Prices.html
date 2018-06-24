@@ -9,108 +9,17 @@
 	<meta name="author" content="Trevor Griswold">
 
 	<style type="text/css">
-		@media only screen and (max-width: 899px) {
-			body {
-				font-size: 1em;
-			}
-			#HeaderMessage, #PricesContainer {
-				border-top-width: 2px !important;
-			}
-		}
-		@media only screen and (min-width: 900px) and (max-width: 1199px) {
-			body {
-				font-size: 1.3em;
-			}
-			#HeaderMessage, #PricesContainer {
-				border-top-width: 3px !important;
-			}
-		}
-		@media only screen and (min-width: 1200px) and (max-width: 1499px) {
-			body {
-				font-size: 1.6em;
-			}
-			#HeaderMessage, #PricesContainer {
-				border-top-width: 3px !important;
-			}
-		}
-		@media only screen and (min-width: 1500px) and (max-width: 1799px) {
-			body {
-				font-size: 2em;
-			}
-			#HeaderMessage, #PricesContainer {
-				border-top-width: 4px !important;
-			}
-		}
-		@media only screen and (min-width: 1800px) and (max-width: 2099px) {
-			body {
-				font-size: 2.4em;
-			}
-			#HeaderMessage, #PricesContainer {
-				border-top-width: 4px !important;
-			}
-		}
-		@media only screen and (min-width: 2100px) and (max-width: 2399px) {
-			body {
-				font-size: 2.8em;
-			}
-			#HeaderMessage, #PricesContainer {
-				border-top-width: 5px !important;
-			}
-		}
-		@media only screen and (min-width: 2400px) and (max-width: 2699px) {
-			body {
-				font-size: 3.2em;
-			}
-			#HeaderMessage, #PricesContainer {
-				border-top-width: 5px !important;
-			}
-		}
-		@media only screen and (min-width: 2700px) and (max-width: 2999px) {
-			body {
-				font-size: 3.6em;
-			}
-			#HeaderMessage, #PricesContainer {
-				border-top-width: 6px !important;
-			}
-		}
-		@media only screen and (min-width: 3000px) and (max-width: 3299px) {
-			body {
-				font-size: 4em;
-			}
-			#HeaderMessage, #PricesContainer {
-				border-top-width: 6px !important;
-			}
-		}
-		@media only screen and (min-width: 3300px) and (max-width: 3599px) {
-			body {
-				font-size: 4.4em;
-			}
-			#HeaderMessage, #PricesContainer {
-				border-top-width: 7px !important;
-			}
-		}
-		@media only screen and (min-width: 3600px) and (max-width: 3899px) {
-			body {
-				font-size: 4.8em;
-			}
-			#HeaderMessage, #PricesContainer {
-				border-top-width: 7px !important;
-			}
-		}
-		@media only screen and (min-width: 3900px) {
-			body {
-				font-size: 5.2em;
-			}
-			#HeaderMessage, #PricesContainer {
-				border-top-width: 8px !important;
-			}
-		}
-		
 		@font-face {
 			font-family: Microgramma D Extended Bold;
 			src: url('Microgramma D Extended Bold.otf') format("opentype");
 		}
 		
+		body {
+			font-size: 2.1vw;
+		}
+		#HeaderMessage, #PricesContainer {
+			border-top-width: 0.5vh !important;
+		}
 		#HeaderContainer {
 			font-size: 2.5em !important;
 		}
@@ -127,27 +36,29 @@
 			font-size: 0.75em;
 		}
 		.PriceCategory, .PriceMemberCategory, .PriceParkingCategory {
-			font-size: 1.0em;
+			font-size: 1.25em;
 		}
-		
-		
 		.RegisteredTM {
 			font-size: 0.25em;
 			padding-top: 1em;
 			padding-right: 1em;
 			font-weight: normal;
 		}
+		
+		.PriceLabel {
+			width: 30%;
+		}
+		.PriceCategory{
+			width: 13%;
+		}
+		.PriceMemberCategory {
+			width: 18%;
+		}
+		
 		.IMAX {
 			font-family: Microgramma D Extended Bold;
 			font-weight: normal;
 		}
-		.RegisteredTMSurround {
-			display: flex;
-			justify-content: start;
-			flex-direction: row;
-			flex-wrap: wrap;
-		}
-		
 		#HeaderMessage, #PricesContainer {
 			border-color: #ffffff;
 			border-style: solid;
@@ -181,7 +92,7 @@
 			height: 82%;
 			font-weight: bold;
 			
-			background-image: url('TicketingTestBG.png');
+			background-image: url('TicketingBG.png');
 			background-size: 100% 100%;
 			background-color: #1C76C9;
 			display: flex;
@@ -225,15 +136,11 @@
 		.PriceLabel, .PriceCategory, .PriceMemberCategory, .PriceParkingCategory {
 			z-index: 1;
 		}
-		
-		.PriceLabel {
-			width: 30%;
-		}
-		.PriceCategory{
-			width: 13%;
-		}
-		.PriceMemberCategory {
-			width: 18%;
+		.RegisteredTMSurround {
+			display: flex;
+			justify-content: start;
+			flex-direction: row;
+			flex-wrap: wrap;
 		}
 		
 		body {
