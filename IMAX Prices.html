@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<title>IMAX Prices</title>
 	<meta name="description" content="Film Prices">
@@ -94,7 +95,6 @@
 			
 			background-image: url('TicketingBG.png');
 			background-size: 100% 100%;
-			background-color: #1C76C9;
 			display: flex;
 			justify-content: space-between;
 			flex-direction: column;
@@ -166,32 +166,106 @@
 			setInterval(updateData, 1000);
 		});
 		
-		var lastLoadedShowtimeDate = null;
+		var lastLoadedPriceDatetime = null;
 		
 		function updateData(){
 			let today = new Date();
 			today.setMinutes(0, 0, 0);
-			if (lastLoadedShowtimeDate === null || lastLoadedShowtimeDate < today)
+			if (lastLoadedPriceDatetime === null || lastLoadedPriceDatetime < today)
 			{
-				lastLoadedShowtimeDate = today;
+				lastLoadedPriceDatetime = today;
 				parsePriceData(today);
 			}
 		}
 		
 		function parsePriceData(today){
 			const apiKey = 'AIzaSyCrkLGinkb81wYSHynyUAelArQnY2uHC_Q';
-			const spreadsheetId = '1F5BzaAmANypyfKyoBZCzpeOgRfrivx9UwWeDLhvQx7U';
-			const filmRange = 'Films!A2%3AC';
-			const showtimeRange = 'Showtimes!A2%3AK';
-			const settingsRange = 'Settings!A2:A';
-			const renderOptions = 'dateTimeRenderOption=FORMATTED_STRING&majorDimension=ROWS&valueRenderOption=UNFORMATTED_VALUE';
+			const spreadsheetId = '1uhbgWaKlz_JVA0LmLdTcl0Y5QJae11giuk8L42fFmLc';
 			
-			//$("#PricesContainer").empty();
-			//$("#HeaderMessage").text('');
+			const standardPriceRange = 'Standard!A2%3AG';
+			const seasonalPriceRange = 'Seasonal!A2%3AI';
+			const settingsRange = 'Settings!A2:C2';
+			const renderOptions = 'dateTimeRenderOption=FORMATTED_STRING&majorDimension=ROWS&valueRenderOption=FORMATTED_VALUE';
 			
-			let parsedShowtimeData = {};
-			const dayNumber = today.getDay();
+			$(".Generated").remove();
 			
+			let parsedPriceData = {};
+			
+			$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+standardPriceRange+'?'+renderOptions+'&key='+apiKey, function(data) {
+				let standardPriceData = data.values;
+				for (let i = 0; i < standardPriceData.length; i++) {
+					if (standardPriceData[i].length > 0) {
+						const categoryCode = (standardPriceData[i][0] || "").toUpperCase();
+						
+						parsedPriceData[categoryCode] = {
+							UnderTwo: standardPriceData[i][1] || "",
+							Kids: standardPriceData[i][2] || "",
+							Adults: standardPriceData[i][3] || "",
+							Seniors: standardPriceData[i][4] || "",
+							Members: standardPriceData[i][5] || "",
+							Members2: standardPriceData[i][6] || "",
+						};
+					}
+				}
+					
+				let advRow = $("#AdvRow");
+				advRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["ADV"].UnderTwo+"</div>");
+				advRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["ADV"].Adults+"</div>");
+				advRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["ADV"].Kids+"</div>");
+				advRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["ADV"].Seniors+"</div>");
+				if (parsedPriceData["ADV"].Members2 !== "") {
+					advRow.append("<div class='PriceMemberCategory Generated'><div class='PriceSubcategory'>"+parsedPriceData["ADV"].Members+"</div><div class='PriceSubcategory'>"+parsedPriceData["ADV"].Members2+"</div></div>");
+				} else {
+					advRow.append("<div class='PriceMemberCategory Generated'>"+parsedPriceData["ADV"].Members+"</div>");
+				}
+				
+				let filmRow = $("#FilmRow");
+				filmRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FILM"].UnderTwo+"</div>");
+				filmRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FILM"].Kids+"</div>");
+				filmRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FILM"].Adults+"</div>");
+				filmRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FILM"].Seniors+"</div>");
+				if (parsedPriceData["FILM"].Members2 !== "") {
+					filmRow.append("<div class='PriceMemberCategory Generated'><div class='PriceSubcategory'>"+parsedPriceData["FILM"].Members+"</div><div class='PriceSubcategory'>"+parsedPriceData["FILM"].Members2+"</div></div>");
+				} else {
+					filmRow.append("<div class='PriceMemberCategory Generated'>"+parsedPriceData["FILM"].Members+"</div>");
+				}
+				
+				let comboRow = $("#ComboRow");
+				comboRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["COMBO"].UnderTwo+"</div>");
+				comboRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["COMBO"].Kids+"</div>");
+				comboRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["COMBO"].Adults+"</div>");
+				comboRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["COMBO"].Seniors+"</div>");
+				if (parsedPriceData["COMBO"].Members2 !== "") {
+					comboRow.append("<div class='PriceMemberCategory Generated'><div class='PriceSubcategory'>"+parsedPriceData["COMBO"].Members+"</div><div class='PriceSubcategory'>"+parsedPriceData["COMBO"].Members2+"</div></div>");
+				} else {
+					comboRow.append("<div class='PriceMemberCategory Generated'>"+parsedPriceData["COMBO"].Members+"</div>");
+				}
+				
+				let featureRow = $("#FeatureRow");
+				featureRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FEATURE"].UnderTwo+"</div>");
+				featureRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FEATURE"].Kids+"</div>");
+				featureRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FEATURE"].Adults+"</div>");
+				featureRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FEATURE"].Seniors+"</div>");
+				if (parsedPriceData["FEATURE"].Members2 !== "") {
+					featureRow.append("<div class='PriceMemberCategory Generated'><div class='PriceSubcategory'>"+parsedPriceData["FEATURE"].Members+"</div><div class='PriceSubcategory'>"+parsedPriceData["FEATURE"].Members2+"</div></div>");
+				} else {
+					featureRow.append("<div class='PriceMemberCategory Generated'>"+parsedPriceData["FEATURE"].Members+"</div>");
+				}
+
+				$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+settingsRange+'?'+renderOptions+'&key='+apiKey, function(data) {
+					let settingsData = data.values;
+					if (settingsData[0].length > 0) {
+						const showFeature = settingsData[0][0] === "TRUE";
+						if (showFeature)
+							$("#FeatureRow").show();
+						else
+							$("#FeatureRow").hide();
+					}
+					
+					$("#ParkingLabel").html(settingsData[0][1]);
+					$("#ParkingMemberLabel").html(settingsData[0][2]);
+				});
+			});
 		}
 		
 	</script>
@@ -228,68 +302,38 @@
 				<div class="PriceSubcategory">&nbsp;</div>
 			</div>
 		</div>
-		<div class="PriceRow">
+		<div id="AdvRow" class="PriceRow">
 			<div class="PriceRowBackground"></div>
 			<div class="PriceLabel">
 				Adventure Halls
 			</div>
-			<div class="PriceCategory">FREE</div>
-			<div class="PriceCategory">$9</div>
-			<div class="PriceCategory">$13</div>
-			<div class="PriceCategory">$12</div>
-			<div class="PriceMemberCategory">FREE</div>
 		</div>
-		<div class="PriceRow">
+		<div id="FilmRow" class="PriceRow">
 			<div class="PriceRowBackground"></div>
 			<div class="PriceLabel">
 				<div class="RegisteredTMSurround"><span class="IMAX">IMAX</span><span class='RegisteredTM'>&reg;</span>Film</div>
 				<div class="PriceSublabel">Documentary (45-60 minutes)</div>
 			</div>
-			<div class="PriceCategory">FREE</div>
-			<div class="PriceCategory">$8</div>
-			<div class="PriceCategory">$9</div>
-			<div class="PriceCategory">$9</div>
-			<div class="PriceMemberCategory">
-				<div class="PriceSubcategory">$6 Child</div>
-				<div class="PriceSubcategory">$7 Adult</div>
-			</div>
 		</div>
-		<div class="PriceRow">
+		<div id="ComboRow" class="PriceRow">
 			<div class="PriceRowBackground"></div>
 			<div class="PriceLabel">
 				<div class="RegisteredTMSurround"><span class="IMAX">IMAX</span><span class='RegisteredTM'>&reg;</span>Film Combo</div>
 				<div class="PriceSublabel">Documentary and Adventure Halls</span></div>
 			</div>
-			<div class="PriceCategory">FREE</div>
-			<div class="PriceCategory">$14</div>
-			<div class="PriceCategory">$18</div>
-			<div class="PriceCategory">$16</div>
-			<div class="PriceMemberCategory">&nbsp;</div>
 		</div>
-		<div class="PriceRow">
+		<div id="FeatureRow" class="PriceRow">
 			<div class="PriceRowBackground"></div>
 			<div class="PriceLabel">
 				<div class="RegisteredTMSurround"><span class="IMAX">IMAX</span><span class='RegisteredTM'>&reg;</span>Feature Film</div>
 				<div class="PriceSublabel">Feature Length Movie (90+ Minutes)</div>
 			</div>
-			<div class="PriceCategory">FREE</div>
-			<div class="PriceCategory">$12</div>
-			<div class="PriceCategory">$15</div>
-			<div class="PriceCategory">$12</div>
-			<div class="PriceMemberCategory">
-				<div class="PriceSubcategory">$11 Child</div>
-				<div class="PriceSubcategory">$14 Adult</div>
-			</div>
 		</div>
-		<div class="PriceRow">
+		<div id="ParkingRow" class="PriceRow">
 			<div class="PriceRowBackground"></div>
-			<div class="PriceLabel">
-				&nbsp;
-			</div>
-			<div class="PriceParkingCategory">
-				PARKING $5
-			</div>
-			<div class="PriceMemberCategory">FREE</div>
+			<div class="PriceLabel">&nbsp;</div>
+			<div id="ParkingLabel" class="PriceParkingCategory"></div>
+			<div id="ParkingMemberLabel" class="PriceMemberCategory"></div>
 		</div>
 	</div>
 </body>

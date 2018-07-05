@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<title>IMAX Showtimes</title>
 	<meta name="description" content="Film Showtimes">
@@ -155,32 +156,31 @@
 			setInterval(updateData, 1000);
 		});
 		
-		var lastLoadedShowtimeDate = null;
+		var lastLoadedShowtimeDatetime = null;
 		
 		function updateData(){
 			$("#CurrentTime").text(getDateTimeText());
 			
 			let today = new Date();
 			today.setMinutes(0, 0, 0);
-			if (lastLoadedShowtimeDate === null || lastLoadedShowtimeDate < today)
+			if (lastLoadedShowtimeDatetime === null || lastLoadedShowtimeDatetime < today)
 			{
-				lastLoadedShowtimeDate = today;
-				parseShowtimeData(today);
+				lastLoadedShowtimeDatetime = today;
+				parseshowtimeData(today);
 			}
 		}
 		
-		function parseShowtimeData(today){
+		function parseshowtimeData(today){
 			const apiKey = 'AIzaSyCrkLGinkb81wYSHynyUAelArQnY2uHC_Q';
 			const spreadsheetId = '1F5BzaAmANypyfKyoBZCzpeOgRfrivx9UwWeDLhvQx7U';
 			const filmRange = 'Films!A2%3AC';
-			const ShowtimeRange = 'Showtimes!A2%3AK';
-			const settingsRange = 'Settings!A2:A';
+			const showtimeRange = 'Showtimes!A2%3AK';
 			const renderOptions = 'dateTimeRenderOption=FORMATTED_STRING&majorDimension=ROWS&valueRenderOption=UNFORMATTED_VALUE';
 			
 			$("#PosterContainer").empty();
 			$("#ShowtimeContainer").empty();
 			
-			let parsedShowtimeData = {};
+			let parsedshowtimeData = {};
 			const dayNumber = today.getDay();
 			
 			$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+filmRange+'?'+renderOptions+'&key='+apiKey, function(data) {
@@ -189,24 +189,24 @@
 					if (filmData[i].length > 0) {
 						const filmCode = (filmData[i][0] || "").toUpperCase();
 						
-						parsedShowtimeData[filmCode] = {
+						parsedshowtimeData[filmCode] = {
 							name: filmData[i][1] || "",
 							posterURL: filmData[i][2],
 							Showtimes: []
 						};
 					}
 				}
-				$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+ShowtimeRange+'?'+renderOptions+'&key='+apiKey, function(data) {
-					let ShowtimeData = data.values;
-					for (let i = 0; i < ShowtimeData.length; i++) {
-						if (ShowtimeData[i].length === 11) {
-							const startDate = new Date(ShowtimeData[i][2]);
-							const endDate = new Date(ShowtimeData[i][3]);
+				$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+showtimeRange+'?'+renderOptions+'&key='+apiKey, function(data) {
+					let showtimeData = data.values;
+					for (let i = 0; i < showtimeData.length; i++) {
+						if (showtimeData[i].length === 11) {
+							const startDate = new Date(showtimeData[i][2]);
+							const endDate = new Date(showtimeData[i][3]);
 							
-							if (ShowtimeData[i][4+dayNumber].toUpperCase() === "Y" && startDate.getTime() <= today.getTime() && endDate.getTime() >= today.getTime()) {
-								const filmCode = ShowtimeData[i][0].toUpperCase();
-								if (parsedShowtimeData[filmCode] !== null && parsedShowtimeData[filmCode] !== undefined)
-									parsedShowtimeData[filmCode].Showtimes.push(ShowtimeData[i][1]);
+							if (showtimeData[i][4+dayNumber].toUpperCase() === "Y" && startDate.getTime() <= today.getTime() && endDate.getTime() >= today.getTime()) {
+								const filmCode = showtimeData[i][0].toUpperCase();
+								if (parsedshowtimeData[filmCode] !== null && parsedshowtimeData[filmCode] !== undefined)
+									parsedshowtimeData[filmCode].Showtimes.push(showtimeData[i][1]);
 							}
 						}
 					}
@@ -215,16 +215,16 @@
 					let ShowtimeContainer = $("#ShowtimeContainer");
 					
 					let filmCount = 0;
-					for (let p in parsedShowtimeData) {
-						if (parsedShowtimeData.hasOwnProperty(p)) {
-							if (parsedShowtimeData[p].Showtimes.length > 0) {
+					for (let p in parsedshowtimeData) {
+						if (parsedshowtimeData.hasOwnProperty(p)) {
+							if (parsedshowtimeData[p].Showtimes.length > 0) {
 								filmCount++;
-								if (parsedShowtimeData[p].posterURL !== null && parsedShowtimeData[p].posterURL !== undefined)
-									posterContainer.append("<div class='FilmPoster'><img src='"+parsedShowtimeData[p].posterURL+"' alt='"+parsedShowtimeData[p].name+"'></div>");
+								if (parsedshowtimeData[p].posterURL !== null && parsedshowtimeData[p].posterURL !== undefined)
+									posterContainer.append("<div class='FilmPoster'><img src='"+parsedshowtimeData[p].posterURL+"' alt='"+parsedshowtimeData[p].name+"'></div>");
 								else
-									posterContainer.append("<div class='FilmTitle'>"+parsedShowtimeData[p].name+"</div>");
+									posterContainer.append("<div class='FilmTitle'>"+parsedshowtimeData[p].name+"</div>");
 									
-								ShowtimeContainer.append("<div class='FilmShowtimes'><div class='Showtime'>"+sortByTime(parsedShowtimeData[p].Showtimes).join("</div><div class='Showtime'>")+"</div></div>");
+								ShowtimeContainer.append("<div class='FilmShowtimes'><div class='Showtime'>"+sortByTime(parsedshowtimeData[p].Showtimes).join("</div><div class='Showtime'>")+"</div></div>");
 							}
 						}
 					}
