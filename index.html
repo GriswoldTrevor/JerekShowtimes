@@ -150,15 +150,29 @@
 </head>
 
 <body>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="jquery.min.js"></script>
 	<script type="text/javascript">
+		/* Use the variable below for film info to be displayed when there are issues retrieving from the spreadsheet */
+		var offlineShowtimeData = {
+			"PAN":{
+				name: "Pandas",
+				posterURL: "https://drive.google.com/uc?id=1to3qFHyXJ7JHyveefuNphVVokZGKSPzZ",
+				showtimes: ["10:00 AM", "12:00 PM", "2:00 PM"]
+			},
+			"BW":{
+				name: "Backyard Wilderness",
+				posterURL: "https://drive.google.com/uc?id=1zZz4ivfnVzBJJd4PHHbLgYOzhbVgpVzd",
+				showtimes: ["11:00 AM", "1:00 PM", "3:00 PM"]
+			}
+		};
+	
 		$( document ).ready(function() {
 			setInterval(updateData, 1000);
 		});
 		
 		var lastLoadedShowtimeDatetime = null;
 		
-		function updateData(){
+		function updateData() {
 			$("#CurrentTime").text(getDateTimeText());
 			
 			let today = new Date();
@@ -170,15 +184,12 @@
 			}
 		}
 		
-		function parseshowtimeData(today){
+		function parseshowtimeData(today) {
 			const apiKey = 'AIzaSyCrkLGinkb81wYSHynyUAelArQnY2uHC_Q';
 			const spreadsheetId = '1F5BzaAmANypyfKyoBZCzpeOgRfrivx9UwWeDLhvQx7U';
 			const filmRange = 'Films!A2%3AC';
 			const showtimeRange = 'Showtimes!A2%3AK';
 			const renderOptions = 'dateTimeRenderOption=FORMATTED_STRING&majorDimension=ROWS&valueRenderOption=UNFORMATTED_VALUE';
-			
-			$("#PosterContainer").empty();
-			$("#ShowtimeContainer").empty();
 			
 			let parsedshowtimeData = {};
 			const dayNumber = today.getDay();
@@ -192,7 +203,7 @@
 						parsedshowtimeData[filmCode] = {
 							name: filmData[i][1] || "",
 							posterURL: filmData[i][2],
-							Showtimes: []
+							showtimes: []
 						};
 					}
 				}
@@ -206,31 +217,44 @@
 							if (showtimeData[i][4+dayNumber].toUpperCase() === "Y" && startDate.getTime() <= today.getTime() && endDate.getTime() >= today.getTime()) {
 								const filmCode = showtimeData[i][0].toUpperCase();
 								if (parsedshowtimeData[filmCode] !== null && parsedshowtimeData[filmCode] !== undefined)
-									parsedshowtimeData[filmCode].Showtimes.push(showtimeData[i][1]);
+									parsedshowtimeData[filmCode].showtimes.push(showtimeData[i][1]);
 							}
 						}
 					}
 					
-					let posterContainer = $("#PosterContainer");
-					let ShowtimeContainer = $("#ShowtimeContainer");
-					
-					let filmCount = 0;
-					for (let p in parsedshowtimeData) {
-						if (parsedshowtimeData.hasOwnProperty(p)) {
-							if (parsedshowtimeData[p].Showtimes.length > 0) {
-								filmCount++;
-								if (parsedshowtimeData[p].posterURL !== null && parsedshowtimeData[p].posterURL !== undefined)
-									posterContainer.append("<div class='FilmPoster'><img src='"+parsedshowtimeData[p].posterURL+"' alt='"+parsedshowtimeData[p].name+"'></div>");
-								else
-									posterContainer.append("<div class='FilmTitle'>"+parsedshowtimeData[p].name+"</div>");
-									
-								ShowtimeContainer.append("<div class='FilmShowtimes'><div class='Showtime'>"+sortByTime(parsedshowtimeData[p].Showtimes).join("</div><div class='Showtime'>")+"</div></div>");
-							}
-						}
-					}
-					$("#HeaderContainer").append('<style type="text/css">.FilmPoster, .FilmShowtimes, .FilmTitle { width: '+Math.floor(99.9/filmCount)+'%; }</style>');
+					loadShowtimes(parsedshowtimeData);
+				}).fail(function(data) {
+					console.log("Failed to retrieve showtime data. Displaying offline data instead.");
+					loadShowtimes(offlineShowtimeData);
 				});
+			}).fail(function(data) {
+				console.log("Failed to retrieve film data. Displaying offline data instead.");
+				loadShowtimes(offlineShowtimeData);
 			});
+		}
+		
+		function loadShowtimes(showtimeData) {
+			let posterContainer = $("#PosterContainer");
+			let ShowtimeContainer = $("#ShowtimeContainer");
+			
+			$("#PosterContainer").empty();
+			$("#ShowtimeContainer").empty();
+			
+			let filmCount = 0;
+			for (let p in showtimeData) {
+				if (showtimeData.hasOwnProperty(p)) {
+					if (showtimeData[p].showtimes.length > 0) {
+						filmCount++;
+						if (showtimeData[p].posterURL !== null && showtimeData[p].posterURL !== undefined)
+							posterContainer.append("<div class='FilmPoster'><img src='"+showtimeData[p].posterURL+"' alt='"+showtimeData[p].name+"'></div>");
+						else
+							posterContainer.append("<div class='FilmTitle'>"+showtimeData[p].name+"</div>");
+							
+						ShowtimeContainer.append("<div class='FilmShowtimes'><div class='Showtime'>"+sortByTime(showtimeData[p].showtimes).join("</div><div class='Showtime'>")+"</div></div>");
+					}
+				}
+			}
+			$("#HeaderContainer").append('<style type="text/css">.FilmPoster, .FilmShowtimes, .FilmTitle { width: '+Math.floor(99.9/filmCount)+'%; }</style>');
 		}
 		
 		function sortByTime(values) {

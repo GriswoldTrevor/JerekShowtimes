@@ -160,8 +160,47 @@
 </head>
 
 <body>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="jquery.min.js"></script>
 	<script type="text/javascript">
+		/* Use the variable below for film prices to be displayed when there are issues retrieving from the spreadsheet */
+		var offlinePriceData = {
+			ADV:{
+				UnderTwo: "FREE",
+				Kids: "$9",
+				Adults: "$13",
+				Seniors: "$12",
+				Members: "FREE",
+				Members2: ""
+			},
+			FILM:{
+				UnderTwo: "FREE",
+				Kids: "$8",
+				Adults: "$9",
+				Seniors: "$9",
+				Members: "$6 Child",
+				Members2: "$7 Adult"
+			},
+			COMBO:{
+				UnderTwo: "FREE",
+				Kids: "$14",
+				Adults: "$18",
+				Seniors: "$16",
+				Members: "",
+				Members2: ""
+			},
+			FEATURE:{
+				UnderTwo: "FREE",
+				Kids: "$12",
+				Adults: "$15",
+				Seniors: "$12",
+				Members: "$11 Child",
+				Members2: "$14 Adult"
+			},
+			ShowFeatureRow: "TRUE",
+			ParkingLabel: "PARKING $5",
+			ParkingMemberLabel: "FREE"
+		};
+	
 		$( document ).ready(function() {
 			setInterval(updateData, 1000);
 		});
@@ -187,8 +226,6 @@
 			const settingsRange = 'Settings!A2:C2';
 			const renderOptions = 'dateTimeRenderOption=FORMATTED_STRING&majorDimension=ROWS&valueRenderOption=FORMATTED_VALUE';
 			
-			$(".Generated").remove();
-			
 			let parsedPriceData = {};
 			
 			$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+standardPriceRange+'?'+renderOptions+'&key='+apiKey, function(data) {
@@ -203,71 +240,94 @@
 							Adults: standardPriceData[i][3] || "",
 							Seniors: standardPriceData[i][4] || "",
 							Members: standardPriceData[i][5] || "",
-							Members2: standardPriceData[i][6] || "",
+							Members2: standardPriceData[i][6] || ""
 						};
 					}
-				}
-					
-				let advRow = $("#AdvRow");
-				advRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["ADV"].UnderTwo+"</div>");
-				advRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["ADV"].Adults+"</div>");
-				advRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["ADV"].Kids+"</div>");
-				advRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["ADV"].Seniors+"</div>");
-				if (parsedPriceData["ADV"].Members2 !== "") {
-					advRow.append("<div class='PriceMemberCategory Generated'><div class='PriceSubcategory'>"+parsedPriceData["ADV"].Members+"</div><div class='PriceSubcategory'>"+parsedPriceData["ADV"].Members2+"</div></div>");
-				} else {
-					advRow.append("<div class='PriceMemberCategory Generated'>"+parsedPriceData["ADV"].Members+"</div>");
-				}
-				
-				let filmRow = $("#FilmRow");
-				filmRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FILM"].UnderTwo+"</div>");
-				filmRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FILM"].Kids+"</div>");
-				filmRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FILM"].Adults+"</div>");
-				filmRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FILM"].Seniors+"</div>");
-				if (parsedPriceData["FILM"].Members2 !== "") {
-					filmRow.append("<div class='PriceMemberCategory Generated'><div class='PriceSubcategory'>"+parsedPriceData["FILM"].Members+"</div><div class='PriceSubcategory'>"+parsedPriceData["FILM"].Members2+"</div></div>");
-				} else {
-					filmRow.append("<div class='PriceMemberCategory Generated'>"+parsedPriceData["FILM"].Members+"</div>");
-				}
-				
-				let comboRow = $("#ComboRow");
-				comboRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["COMBO"].UnderTwo+"</div>");
-				comboRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["COMBO"].Kids+"</div>");
-				comboRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["COMBO"].Adults+"</div>");
-				comboRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["COMBO"].Seniors+"</div>");
-				if (parsedPriceData["COMBO"].Members2 !== "") {
-					comboRow.append("<div class='PriceMemberCategory Generated'><div class='PriceSubcategory'>"+parsedPriceData["COMBO"].Members+"</div><div class='PriceSubcategory'>"+parsedPriceData["COMBO"].Members2+"</div></div>");
-				} else {
-					comboRow.append("<div class='PriceMemberCategory Generated'>"+parsedPriceData["COMBO"].Members+"</div>");
-				}
-				
-				let featureRow = $("#FeatureRow");
-				featureRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FEATURE"].UnderTwo+"</div>");
-				featureRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FEATURE"].Kids+"</div>");
-				featureRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FEATURE"].Adults+"</div>");
-				featureRow.append("<div class='PriceCategory Generated'>"+parsedPriceData["FEATURE"].Seniors+"</div>");
-				if (parsedPriceData["FEATURE"].Members2 !== "") {
-					featureRow.append("<div class='PriceMemberCategory Generated'><div class='PriceSubcategory'>"+parsedPriceData["FEATURE"].Members+"</div><div class='PriceSubcategory'>"+parsedPriceData["FEATURE"].Members2+"</div></div>");
-				} else {
-					featureRow.append("<div class='PriceMemberCategory Generated'>"+parsedPriceData["FEATURE"].Members+"</div>");
 				}
 
 				$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+settingsRange+'?'+renderOptions+'&key='+apiKey, function(data) {
 					let settingsData = data.values;
-					if (settingsData[0].length > 0) {
-						const showFeature = settingsData[0][0] === "TRUE";
-						if (showFeature)
-							$("#FeatureRow").show();
-						else
-							$("#FeatureRow").hide();
+					if (settingsData[0].length > 2) {
+						parsedPriceData.ShowFeatureRow = settingsData[0][0];
+						parsedPriceData.ParkingLabel = settingsData[0][1];
+						parsedPriceData.ParkingMemberLabel = settingsData[0][2];
+					}
+					else {
+						parsedPriceData.ShowFeatureRow = offlinePriceData.ShowFeatureRow;
+						parsedPriceData.ParkingLabel = offlinePriceData.ParkingLabel;
+						parsedPriceData.ParkingMemberLabel = offlinePriceData.ParkingMemberLabel;
 					}
 					
-					$("#ParkingLabel").html(settingsData[0][1]);
-					$("#ParkingMemberLabel").html(settingsData[0][2]);
+					loadPrices(parsedPriceData);
+				}).fail(function(data) {
+					parsedPriceData.ShowFeatureRow = offlinePriceData.ShowFeatureRow;
+					parsedPriceData.ParkingLabel = offlinePriceData.ParkingLabel;
+					parsedPriceData.ParkingMemberLabel = offlinePriceData.ParkingMemberLabel;
+					
+					console.log("Failed to retrieve settings data. Using offline settings instead.");
+					loadPrices(parsedPriceData);
 				});
+			}).fail(function(data) {
+				console.log("Failed to retrieve price data. Displaying offline data instead.");
+				loadPrices(offlinePriceData);
 			});
 		}
 		
+		function loadPrices(priceData) {
+			$(".Generated").remove();
+			
+			let advRow = $("#AdvRow");
+			advRow.append("<div class='PriceCategory Generated'>"+priceData.ADV.UnderTwo+"</div>");
+			advRow.append("<div class='PriceCategory Generated'>"+priceData.ADV.Kids+"</div>");
+			advRow.append("<div class='PriceCategory Generated'>"+priceData.ADV.Adults+"</div>");
+			advRow.append("<div class='PriceCategory Generated'>"+priceData.ADV.Seniors+"</div>");
+			if (priceData.ADV.Members2 !== "") {
+				advRow.append("<div class='PriceMemberCategory Generated'><div class='PriceSubcategory'>"+priceData.ADV.Members+"</div><div class='PriceSubcategory'>"+priceData.ADV.Members2+"</div></div>");
+			} else {
+				advRow.append("<div class='PriceMemberCategory Generated'>"+priceData.ADV.Members+"</div>");
+			}
+			
+			let filmRow = $("#FilmRow");
+			filmRow.append("<div class='PriceCategory Generated'>"+priceData.FILM.UnderTwo+"</div>");
+			filmRow.append("<div class='PriceCategory Generated'>"+priceData.FILM.Kids+"</div>");
+			filmRow.append("<div class='PriceCategory Generated'>"+priceData.FILM.Adults+"</div>");
+			filmRow.append("<div class='PriceCategory Generated'>"+priceData.FILM.Seniors+"</div>");
+			if (priceData.FILM.Members2 !== "") {
+				filmRow.append("<div class='PriceMemberCategory Generated'><div class='PriceSubcategory'>"+priceData.FILM.Members+"</div><div class='PriceSubcategory'>"+priceData.FILM.Members2+"</div></div>");
+			} else {
+				filmRow.append("<div class='PriceMemberCategory Generated'>"+priceData.FILM.Members+"</div>");
+			}
+			
+			let comboRow = $("#ComboRow");
+			comboRow.append("<div class='PriceCategory Generated'>"+priceData.COMBO.UnderTwo+"</div>");
+			comboRow.append("<div class='PriceCategory Generated'>"+priceData.COMBO.Kids+"</div>");
+			comboRow.append("<div class='PriceCategory Generated'>"+priceData.COMBO.Adults+"</div>");
+			comboRow.append("<div class='PriceCategory Generated'>"+priceData.COMBO.Seniors+"</div>");
+			if (priceData.COMBO.Members2 !== "") {
+				comboRow.append("<div class='PriceMemberCategory Generated'><div class='PriceSubcategory'>"+priceData.COMBO.Members+"</div><div class='PriceSubcategory'>"+priceData.COMBO.Members2+"</div></div>");
+			} else {
+				comboRow.append("<div class='PriceMemberCategory Generated'>"+priceData.COMBO.Members+"</div>");
+			}
+			
+			let featureRow = $("#FeatureRow");
+			featureRow.append("<div class='PriceCategory Generated'>"+priceData.FEATURE.UnderTwo+"</div>");
+			featureRow.append("<div class='PriceCategory Generated'>"+priceData.FEATURE.Kids+"</div>");
+			featureRow.append("<div class='PriceCategory Generated'>"+priceData.FEATURE.Adults+"</div>");
+			featureRow.append("<div class='PriceCategory Generated'>"+priceData.FEATURE.Seniors+"</div>");
+			if (priceData.FEATURE.Members2 !== "") {
+				featureRow.append("<div class='PriceMemberCategory Generated'><div class='PriceSubcategory'>"+priceData.FEATURE.Members+"</div><div class='PriceSubcategory'>"+priceData.FEATURE.Members2+"</div></div>");
+			} else {
+				featureRow.append("<div class='PriceMemberCategory Generated'>"+priceData.FEATURE.Members+"</div>");
+			}
+			
+			if (priceData.ShowFeatureRow === "TRUE")
+				$("#FeatureRow").show();
+			else
+				$("#FeatureRow").hide();
+
+			$("#ParkingLabel").html(priceData.ParkingLabel);
+			$("#ParkingMemberLabel").html(priceData.ParkingMemberLabel);
+		}
 	</script>
 	<div id="HeaderContainer">
 		GENERAL ADMISSION
