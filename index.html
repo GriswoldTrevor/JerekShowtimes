@@ -269,10 +269,10 @@
 			let timeHours = time.getHours();
 			if (timeHours == 0) {
 			  timeHours = 12;
+			} else if (timeHours > 11) {
 			  timeSuffix = "pm";
-			} else if (timeHours > 12) {
-			  timeHours = timeHours - 12;
-			  timeSuffix = "pm";
+			  if (timeHours > 12)
+				timeHours = timeHours - 12;
 			}
 			return (timeHours + ":" + zeroPadNumber(time.getMinutes()) + " " + timeSuffix);
 		}
