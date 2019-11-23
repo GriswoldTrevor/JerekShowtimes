@@ -1,0 +1,267 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Concession Prices</title>
+	<meta name="description" content="Concession Prices">
+	<meta name="author" content="Trevor Griswold">
+
+	<style type="text/css">
+		@font-face {
+			font-family: Microgramma D Extended Bold;
+			src: url('Microgramma D Extended Bold.otf') format("opentype");
+		}
+		
+		body {
+			font-size: 2.1vw;
+		}
+		#HeaderMessage, #PricesContainer {
+			border-top-width: 0.5vh !important;
+		}
+		#HeaderContainer {
+			font-size: 2.5em !important;
+		}
+		#HeaderMessage, #PricesContainer {
+			font-size: 1em !important;
+		}
+		.PriceLabel {
+			font-size: 1.25em;
+		}
+		.PriceSublabel {
+			font-size: 0.5em;
+		}
+		.PriceSubcategory {
+			font-size: 0.75em;
+		}
+		.PriceCategory, .PriceMemberCategory, .PriceParkingCategory {
+			font-size: 1.25em;
+		}
+		.RegisteredTM {
+			font-size: 0.25em;
+			padding-top: 1em;
+			padding-right: 1em;
+			font-weight: normal;
+		}
+		
+		.PriceLabel {
+			width: 30%;
+		}
+		.PriceCategory{
+			width: 13%;
+		}
+		.PriceMemberCategory {
+			width: 18%;
+		}
+		
+		.IMAX {
+			font-family: Microgramma D Extended Bold;
+			font-weight: normal;
+		}
+		#HeaderMessage, #PricesContainer {
+			border-color: #ffffff;
+			border-style: solid;
+			border-collapse: collapse;
+			border-width: 0px 0px 0px 0px;
+		}
+		#HeaderContainer {
+			height: 12%;
+			background: #184896;
+			
+			font-weight: bold;
+			text-align: left;
+			
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding-left: 0.25em;
+		}
+		#HeaderMessage {
+			height: 6%;
+			
+			font-weight: bold;
+			text-align: left;
+			
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding-left: 0.625em;
+		}
+		#PricesContainer {
+			height: 82%;
+			font-weight: bold;
+			
+			background-image: url('TicketingBG.png');
+			background-size: 100% 100%;
+			display: flex;
+			justify-content: space-between;
+			flex-direction: column;
+		}
+		.PriceRow:first-child {
+			margin-top: 3%;
+		}
+		.PriceRow:last-child {
+			margin-bottom: 2%;
+		}
+		.PriceRow {
+			position: relative;
+			display: flex;
+			justify-content: space-between;
+			flex-direction: row;
+		}
+		.PriceRowBackground {
+			display: block;
+			width:100%;
+			height:100%;
+			position:absolute;
+			background-color: rgba(0, 0, 0, 0.25);
+			mix-blend-mode: overlay;
+		}
+		.PriceLabel {
+			text-align: left;
+			padding-left: 0.5em;
+			padding-top: 0.25em;
+			padding-bottom: 0.25em;
+		}
+		.PriceCategory, .PriceMemberCategory, .PriceParkingCategory {
+			text-align: center;
+			display: flex;
+			justify-content: space-around;
+			flex-direction: column;
+			padding-top: 0.25em;
+			padding-bottom: 0.25em;
+		}
+		.PriceLabel, .PriceCategory, .PriceMemberCategory, .PriceParkingCategory {
+			z-index: 1;
+		}
+		.RegisteredTMSurround {
+			display: flex;
+			justify-content: start;
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+		
+		body {
+			font-family: verdana !important;
+			background: linear-gradient(to right, #0546B5, #1C76C9);
+			color: white;
+			
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+		}
+		html, body {
+			margin: 0;
+			height: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+		/* Use the variable below for concession prices to be displayed when there are issues retrieving from the spreadsheet */
+		var offlinePriceData = {
+			POPSM: {
+        Label: "Small Popcorn",
+        Price: "$6.00"
+      },
+			POPLG: {
+        Label: "Large Popcorn",
+        Price: "$8.00"
+      },
+			DRINKSM: {
+        Label: "Small Drink",
+        Price: "$2.50"
+      },
+      DRINKLG: {
+        Label: "20 oz Drink",
+        Price: "$3.50"
+      },
+			COMBOKID: {
+        Label: "Kid's Combo",
+        Price: "$7.00"
+      },
+      COMBOTWO: {
+        Label: "For-Two Combo",
+        Price: "$15.00"
+      },
+			COMBOFAMILY: {
+        Label: "Family Combo",
+        Price: "$30.00"
+      }
+		};
+	
+		$( document ).ready(function() {
+			setInterval(updateData, 1000);
+		});
+		
+		var lastLoadedPriceDatetime = null;
+		
+		function updateData(){
+			let today = new Date();
+			today.setMinutes(0, 0, 0);
+			if (lastLoadedPriceDatetime === null || lastLoadedPriceDatetime < today)
+			{
+				lastLoadedPriceDatetime = today;
+				parsePriceData(today);
+			}
+		}
+		
+		function parsePriceData(today){
+			const apiKey = 'AIzaSyCrkLGinkb81wYSHynyUAelArQnY2uHC_Q';
+			const spreadsheetId = '1OyjMJR7b1gvvSUlNc5_vnuAxHfSEq5Sl2uUNpx4LXO4';
+      
+			const priceRange = 'Prices!A2%3AC';
+			const renderOptions = 'dateTimeRenderOption=FORMATTED_STRING&majorDimension=ROWS&valueRenderOption=FORMATTED_VALUE';
+			
+			let parsedItemData = {};
+			
+			$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+priceRange+'?'+renderOptions+'&key='+apiKey, function(data) {
+				let itemData = data.values;
+				for (let i = 0; i < itemData.length; i++) {
+					if (itemData[i].length > 0) {
+						const itemCode = (itemData[i][0] || "").toUpperCase();
+						
+						parsedItemData[itemCode] = {
+							Label: itemData[i][1] || "",
+							Price: itemData[i][2] || ""
+						};
+					}
+				}
+        loadPrices(parsedItemData);
+			}).fail(function(data) {
+				console.log("Failed to retrieve price data. Displaying offline data instead.");
+				loadPrices(offlinePriceData);
+			});
+		}
+		
+		function loadPrices(priceData) {
+			$(".Generated").remove();
+			
+			let pricesContainer = $("#PricesContainer");
+      let itemCodes = Object.keys(priceData);
+      for (let i = 0; i < itemCodes.length; i++) {
+        let itemCode = itemCodes[i];
+        let itemHTML = ""+
+          "<div id='"+itemCode+"' class='PriceRow Generated'>"+
+            "<div class='PriceRowBackground Generated'></div>"+
+            "<div class='PriceLabel Generated'>"+priceData[itemCode].Label+"</div>"+
+            "<div class='PriceCategory Generated'>"+priceData[itemCode].Price+"</div>"+
+          "</div>";
+        pricesContainer.append(itemHTML);
+      }
+		}
+	</script>
+	<div id="HeaderContainer">
+		CONCESSIONS
+	</div>
+	<div id="HeaderMessage">
+		ALL SALES ARE SUBJECT TO A 10% SALES TAX
+	</div>
+	<div id="PricesContainer">
+	</div>
+</body>
+</html>
