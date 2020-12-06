@@ -14,6 +14,10 @@
       font-family: "Gotham-Ultra";
       src: url(Gotham-Ultra.otf) format("opentype");
     }
+    @font-face {
+			font-family: Microgramma D Extended Bold;
+			src: url('Microgramma D Extended Bold.otf') format("opentype");
+		}
 		
 		body {
 			font-size: 2.1vw;
@@ -39,7 +43,13 @@
 			padding-right: 1em;
 			font-weight: normal;
 		}
-
+    .IMAX {
+			font-family: Microgramma D Extended Bold;
+			font-weight: normal;
+		}
+    .ShowtimeHeader {
+      padding-top: 0.05em;
+    }
 		.FilmPoster {
 			height: 100%;
 			text-align: center;
@@ -347,7 +357,7 @@
 		<div id="HeaderTitle">
 			<span class='IMAX'>IMAX</span>
 			<span class='RegisteredTM'>&reg;</span>
-			SHOWTIMES
+			<span class='ShowtimeHeader'>SHOWTIMES</span>
 		</div>
 	</div>
 	<div id="CurrentTime"></div>
