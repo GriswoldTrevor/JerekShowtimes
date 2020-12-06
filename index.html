@@ -10,15 +10,15 @@
 	<meta name="author" content="Trevor Griswold">
 
 	<style type="text/css">
-		@font-face {
-			font-family: Microgramma D Extended Bold;
-			src: url('Microgramma D Extended Bold.otf') format("opentype");
-		}
+    @font-face {
+      font-family: "Gotham-Ultra";
+      src: url(Gotham-Ultra.otf) format("opentype");
+    }
 		
 		body {
 			font-size: 2.1vw;
 		}
-		#CurrentTime, #PosterContainer, #ShowtimeContainer {
+		#CurrentTime, #PosterContainer, #ShowtimeContainer, #MessageContainer {
 			border-top-width: 0.5vh !important;
 		}
 		.FilmShowtimes:not(:last-child) {
@@ -39,13 +39,7 @@
 			padding-right: 1em;
 			font-weight: normal;
 		}
-		
-		
-		
-		.IMAX {
-			font-family: Microgramma D Extended Bold;
-			font-weight: normal;
-		}
+
 		.FilmPoster {
 			height: 100%;
 			text-align: center;
@@ -88,7 +82,7 @@
 			flex-direction: row;
 		}
 		
-		#CurrentTime, #PosterContainer, #ShowtimeContainer {
+		#CurrentTime, #PosterContainer, #ShowtimeContainer, #MessageContainer {
 			border-color: #ffffff;
 			border-style: solid;
 			border-collapse: collapse;
@@ -126,15 +120,26 @@
 			flex-direction: row;
 		}
 		#ShowtimeContainer {
-			height: 27%;
+			height: 21%;
 			
 			display: flex;
 			justify-content: space-between;
 			flex-direction: row;
 		}
+    #MessageContainer {
+      height: 6%;
+      
+      font-weight: bold;
+			text-align: left;
+      
+      padding-left: 0.625em;
+    }
+    .FilmPoster, .FilmShowtimes, .FilmTitle {
+      width: 100%; 
+    }
 		
 		body {
-			font-family: verdana !important;
+			font-family: Gotham-Ultra, verdana !important;
 			background: linear-gradient(to left, #0546B5, #1C76C9);
 			color: white;
 			
@@ -165,6 +170,12 @@
 				showtimes: ["11:00 AM", "1:00 PM", "3:00 PM"]
 			}
 		};
+    var offlineMessageData = {
+			0:{
+        0: "Announcement",
+        1: "Closed Captioning and Descriptive Video avaliable upon request"
+			}
+		};
 	
 		$( document ).ready(function() {
 			setInterval(updateData, 1000);
@@ -189,6 +200,7 @@
 			const spreadsheetId = '1F5BzaAmANypyfKyoBZCzpeOgRfrivx9UwWeDLhvQx7U';
 			const filmRange = 'Films!A2%3AC';
 			const showtimeRange = 'Showtimes!A2%3AK';
+			const messageRange = 'Messages!A1%3AB';
 			const renderOptions = 'dateTimeRenderOption=FORMATTED_STRING&majorDimension=ROWS&valueRenderOption=UNFORMATTED_VALUE';
 			
 			let parsedshowtimeData = {};
@@ -227,9 +239,18 @@
 					console.log("Failed to retrieve showtime data. Displaying offline data instead.");
 					loadShowtimes(offlineShowtimeData);
 				});
+        $.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+messageRange+'?'+renderOptions+'&key='+apiKey, function(data) {
+					let messageData = data.values;
+          loadMessages(messageData);
+        }).fail(function(data) {
+					console.log("Failed to retrieve message data. Displaying offline data instead.");
+					loadMessage(offlineMessageData);
+				});
 			}).fail(function(data) {
 				console.log("Failed to retrieve film data. Displaying offline data instead.");
 				loadShowtimes(offlineShowtimeData);
+        console.log("Failed to retrieve message data. Displaying offline data instead.");
+        loadMessage(offlineMessageData);
 			});
 		}
 		
@@ -254,9 +275,13 @@
 					}
 				}
 			}
-			$("#HeaderContainer").append('<style type="text/css">.FilmPoster, .FilmShowtimes, .FilmTitle { width: '+Math.floor(99.9/filmCount)+'%; }</style>');
 		}
-		
+		function loadMessages(messageData) {
+      for (let i = 0; i < messageData.length; i++) {
+        if(messageData[i][0] === "Announcement")
+          $("#MessageContainer").text(messageData[i][1]);
+      }
+    }
 		function sortByTime(values) {
 			return values.sort(function (t1, t2) { return new Date('1970/01/01 ' + t1) - new Date('1970/01/01 ' + t2);});
 		}
@@ -323,5 +348,6 @@
 	<div id="CurrentTime"></div>
 	<div id="PosterContainer"></div>
 	<div id="ShowtimeContainer"></div>
+  <div id="MessageContainer"></div>
 </body>
 </html>
