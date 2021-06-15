@@ -22,33 +22,68 @@
 		body {
 			font-size: 2.1vw;
 		}
-		#CurrentTime, #PosterContainer, #ShowtimeContainer, #MessageContainer {
+    #PosterContainer, #ShowtimeContainer, #MessageContainer, .FilmPoster, .FilmShowtimes, .FilmNote {
+      border-color: #ffffff;
+			border-style: solid;
+			border-collapse: collapse;
+			border-width: 0px 0px 0px 0px;
+    }
+		#PosterContainer, #ShowtimeContainer, #MessageContainer {
 			border-top-width: 0.5vh !important;
 		}
-		.FilmShowtimes:not(:last-child) {
+		.FilmShowtimes:not(:last-child), .FilmPoster:not(:last-child), .FilmNote:not(:last-child)  {
 			border-right-width: 0.5vh !important;
 		}
-		#HeaderContainer {
-			font-size: 2.5em !important;
-		}
+    
 		.FilmPoster, #CurrentTime, #MessageContainer {
 			font-size: 1em !important;
 		}
 		.FilmShowtimes {
 			font-size: 1em !important;
 		}
+    
 		.RegisteredTM {
-			font-size: 0.25em;
-			padding-top: 1.15em;
-			padding-right: 1em;
+			padding-top: 0.65em;
+			padding-right: 0.5em;
 			font-weight: normal;
 		}
     .IMAX {
 			font-family: Microgramma D Extended Bold;
 			font-weight: normal;
+      font-size: 2.5em;
 		}
     .ShowtimeHeader {
+      font-size: 2.5em;
       padding-top: 0.05em;
+    }
+    .CurrentTime {
+			font-weight: bold;
+			text-align: right;
+			
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+			padding-right: 0.5em;
+			padding-bottom: 0.5em;
+      width: 100%;
+		}
+    
+    .FilmBackroundNone {
+			background: #030b0f;
+    }
+    .FilmBackroundDocumentary {
+			background: #306cc2;
+    }
+    .FilmBackroundFeature {
+			background: #e22223;
+    }
+    .FilmBackroundScience {
+			background: #1fa56d;
+    }
+    .FilmNote {
+      text-align: center;
+			padding: 10px 10px 10px 10px;
+      font-size: 0.8em;
     }
 		.FilmPoster {
 			height: 100%;
@@ -76,11 +111,6 @@
 			justify-content: flex-start;
 			flex-direction: column;
 			flex-wrap: wrap;
-			
-			border-width: 0px 0px 0px 0px;
-			border-style: solid;
-			border-color: white;
-			border-collapse: collapse;
 		}
 		.Showtime {
 			text-align: center;
@@ -92,12 +122,6 @@
 			flex-direction: row;
 		}
 		
-		#CurrentTime, #PosterContainer, #ShowtimeContainer, #MessageContainer {
-			border-color: #ffffff;
-			border-style: solid;
-			border-collapse: collapse;
-			border-width: 0px 0px 0px 0px;
-		}
 		#HeaderContainer {
 			height: 12%;
 			background: #184896;
@@ -110,21 +134,16 @@
 			justify-content: center;
 			padding-left: 0.25em;
 		}
-		#CurrentTime {
-			height: 6%;
-			
-			font-weight: bold;
-			text-align: right;
-			
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			padding-right: 0.625em;
-		}
 		#PosterContainer {
 			height: 55%;
 			
-			background: #030b0f;
+			display: flex;
+			justify-content: space-between;
+			flex-direction: row;
+		}
+    #NoteContainer {
+			height: 6%;
+			
 			display: flex;
 			justify-content: space-between;
 			flex-direction: row;
@@ -149,7 +168,7 @@
 			justify-content: center;
 			padding-left: 0.25em;
     }
-    .FilmPoster, .FilmShowtimes, .FilmTitle {
+    .FilmPoster, .FilmShowtimes, .FilmTitle, .FilmNote {
       width: 100%; 
     }
 		
@@ -177,11 +196,15 @@
 			"PAN":{
 				name: "Pandas",
 				posterURL: "https://drive.google.com/uc?id=1to3qFHyXJ7JHyveefuNphVVokZGKSPzZ",
+        background: "None",
+        filmNote: "NOW PLAYING",
 				showtimes: ["10:00 AM", "12:00 PM", "2:00 PM"]
 			},
 			"BW":{
 				name: "Backyard Wilderness",
 				posterURL: "https://drive.google.com/uc?id=1zZz4ivfnVzBJJd4PHHbLgYOzhbVgpVzd",
+        background: "None",
+        filmNote: "NOW PLAYING",
 				showtimes: ["11:00 AM", "1:00 PM", "3:00 PM"]
 			}
 		};
@@ -199,7 +222,7 @@
 		var lastLoadedShowtimeDatetime = null;
 		
 		function updateData() {
-			$("#CurrentTime").text(getDateTimeText());
+			$(".CurrentTime").text(getDateTimeText());
 			
 			let today = new Date();
 			today.setMinutes(0, 0, 0);
@@ -213,7 +236,7 @@
 		function parseshowtimeData(today) {
 			const apiKey = 'AIzaSyCrkLGinkb81wYSHynyUAelArQnY2uHC_Q';
 			const spreadsheetId = '1F5BzaAmANypyfKyoBZCzpeOgRfrivx9UwWeDLhvQx7U';
-			const filmRange = 'Films!A2%3AC';
+			const filmRange = 'Films!A2%3AE';
 			const showtimeRange = 'Showtimes!A2%3AK';
 			const messageRange = 'Messages!A1%3AB';
 			const renderOptions = 'dateTimeRenderOption=FORMATTED_STRING&majorDimension=ROWS&valueRenderOption=UNFORMATTED_VALUE';
@@ -230,6 +253,8 @@
 						parsedshowtimeData[filmCode] = {
 							name: filmData[i][1] || "",
 							posterURL: filmData[i][2],
+              background: filmData[i][3],
+              filmNote: filmData[i][4],
 							showtimes: []
 						};
 					}
@@ -271,21 +296,38 @@
 		
 		function loadShowtimes(showtimeData) {
 			let posterContainer = $("#PosterContainer");
+			let noteContainer = $("#NoteContainer");
 			let ShowtimeContainer = $("#ShowtimeContainer");
+      let filmBackgroundClass = "";
 			
 			$("#PosterContainer").empty();
+			$("#NoteContainer").empty();
 			$("#ShowtimeContainer").empty();
 			
 			let filmCount = 0;
 			for (let p in showtimeData) {
 				if (showtimeData.hasOwnProperty(p)) {
 					if (showtimeData[p].showtimes.length > 0) {
-						filmCount++;
+            filmBackgroundClass = "FilmBackroundNone";
+            filmCount++;
+            
+            if (showtimeData[p].background === "Documentary")
+              filmBackgroundClass = "FilmBackroundDocumentary";
+            else if (showtimeData[p].background === "IMAX Feature")
+              filmBackgroundClass = "FilmBackroundFeature";
+            else if (showtimeData[p].background === "Science on Screen")
+              filmBackgroundClass = "FilmBackroundScience";
+						
 						if (showtimeData[p].posterURL !== null && showtimeData[p].posterURL !== undefined)
-							posterContainer.append("<div class='FilmPoster'><img src='"+showtimeData[p].posterURL+"' alt='"+showtimeData[p].name+"'></div>");
+							posterContainer.append("<div class='FilmPoster "+filmBackgroundClass+"'><img src='"+showtimeData[p].posterURL+"' alt='"+showtimeData[p].name+"'></div>");
 						else
-							posterContainer.append("<div class='FilmTitle'>"+showtimeData[p].name+"</div>");
-							
+							posterContainer.append("<div class='FilmTitle "+filmBackgroundClass+"'>"+showtimeData[p].name+"</div>");
+              
+						if (showtimeData[p].filmNote !== null && showtimeData[p].filmNote !== undefined)
+              noteContainer.append("<div class='FilmNote "+filmBackgroundClass+"'>"+showtimeData[p].filmNote+"</div>");
+            else
+              noteContainer.append("<div class='FilmNote "+filmBackgroundClass+"'>&nbsp;</div>");
+              
 						ShowtimeContainer.append("<div class='FilmShowtimes'><div class='Showtime'>"+sortByTime(showtimeData[p].showtimes).join("</div><div class='Showtime'>")+"</div></div>");
 					}
 				}
@@ -358,10 +400,11 @@
 			<span class='IMAX'>IMAX</span>
 			<span class='RegisteredTM'>&reg;</span>
 			<span class='ShowtimeHeader'>SHOWTIMES</span>
+      <span class="CurrentTime"></span>
 		</div>
 	</div>
-	<div id="CurrentTime"></div>
 	<div id="PosterContainer"></div>
+	<div id="NoteContainer"></div>
 	<div id="ShowtimeContainer"></div>
   <div id="MessageContainer"></div>
 </body>

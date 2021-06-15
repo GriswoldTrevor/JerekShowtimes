@@ -11,6 +11,10 @@
 
 	<style type="text/css">
 		@font-face {
+      font-family: "Gotham-Ultra";
+      src: url(Gotham-Ultra.otf) format("opentype");
+    }
+    @font-face {
 			font-family: Microgramma D Extended Bold;
 			src: url('Microgramma D Extended Bold.otf') format("opentype");
 		}
@@ -18,13 +22,13 @@
 		body {
 			font-size: 2.1vw;
 		}
-		#HeaderMessage, #PricesContainer {
+		#FooterMessage, #PricesContainer {
 			border-top-width: 0.5vh !important;
 		}
 		#HeaderContainer {
 			font-size: 2.5em !important;
 		}
-		#HeaderMessage, #PricesContainer {
+		#FooterMessage, #PricesContainer {
 			font-size: 1em !important;
 		}
 		.PriceLabel {
@@ -60,7 +64,7 @@
 			font-family: Microgramma D Extended Bold;
 			font-weight: normal;
 		}
-		#HeaderMessage, #PricesContainer {
+		#FooterMessage, #PricesContainer {
 			border-color: #ffffff;
 			border-style: solid;
 			border-collapse: collapse;
@@ -78,11 +82,12 @@
 			justify-content: center;
 			padding-left: 0.25em;
 		}
-		#HeaderMessage {
+		#FooterMessage {
 			height: 6%;
+      background: #184896;
 			
 			font-weight: bold;
-			text-align: left;
+			text-align: center;
 			
 			display: flex;
 			flex-direction: column;
@@ -144,7 +149,7 @@
 		}
 		
 		body {
-			font-family: verdana !important;
+			font-family: Gotham-Ultra, verdana !important;
 			background: linear-gradient(to right, #0546B5, #1C76C9);
 			color: white;
 			
@@ -166,9 +171,9 @@
 		var offlinePriceData = {
 			ADV:{
 				UnderTwo: "FREE",
-				Kids: "$9",
-				Adults: "$13",
-				Seniors: "$12",
+				Kids: "$12",
+				Adults: "$15",
+				Seniors: "$14",
 				Members: "FREE",
 				Members2: ""
 			},
@@ -182,23 +187,24 @@
 			},
 			COMBO:{
 				UnderTwo: "FREE",
-				Kids: "$14",
-				Adults: "$18",
-				Seniors: "$16",
+				Kids: "$15",
+				Adults: "$20",
+				Seniors: "$18",
 				Members: "",
 				Members2: ""
 			},
 			FEATURE:{
 				UnderTwo: "FREE",
-				Kids: "$12",
-				Adults: "$15",
-				Seniors: "$12",
-				Members: "$11 Child",
-				Members2: "$14 Adult"
+				Kids: "$9",
+				Adults: "$10",
+				Seniors: "$10",
+				Members: "$8 Child",
+				Members2: "$9 Adult"
 			},
 			ShowFeatureRow: "TRUE",
 			ParkingLabel: "PARKING $5",
-			ParkingMemberLabel: "FREE"
+			ParkingMemberLabel: "FREE",
+      FooterMessage: "ALL SALES ARE SUBJECT TO A 10% SALES TAX"
 		};
 	
 		$( document ).ready(function() {
@@ -223,7 +229,7 @@
 			
 			const standardPriceRange = 'Standard!A2%3AG';
 			const seasonalPriceRange = 'Seasonal!A2%3AI';
-			const settingsRange = 'Settings!A2:C2';
+			const settingsRange = 'Settings!A2:D2';
 			const renderOptions = 'dateTimeRenderOption=FORMATTED_STRING&majorDimension=ROWS&valueRenderOption=FORMATTED_VALUE';
 			
 			let parsedPriceData = {};
@@ -247,15 +253,17 @@
 
 				$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values/'+settingsRange+'?'+renderOptions+'&key='+apiKey, function(data) {
 					let settingsData = data.values;
-					if (settingsData[0].length > 2) {
+					if (settingsData[0].length > 3) {
 						parsedPriceData.ShowFeatureRow = settingsData[0][0];
 						parsedPriceData.ParkingLabel = settingsData[0][1];
 						parsedPriceData.ParkingMemberLabel = settingsData[0][2];
+						parsedPriceData.FooterMessage = settingsData[0][3];
 					}
 					else {
 						parsedPriceData.ShowFeatureRow = offlinePriceData.ShowFeatureRow;
 						parsedPriceData.ParkingLabel = offlinePriceData.ParkingLabel;
 						parsedPriceData.ParkingMemberLabel = offlinePriceData.ParkingMemberLabel;
+            parsedPriceData.FooterMessage = offlinePriceData.FooterMessage;
 					}
 					
 					loadPrices(parsedPriceData);
@@ -263,6 +271,7 @@
 					parsedPriceData.ShowFeatureRow = offlinePriceData.ShowFeatureRow;
 					parsedPriceData.ParkingLabel = offlinePriceData.ParkingLabel;
 					parsedPriceData.ParkingMemberLabel = offlinePriceData.ParkingMemberLabel;
+					parsedPriceData.FooterMessage = offlinePriceData.FooterMessage;
 					
 					console.log("Failed to retrieve settings data. Using offline settings instead.");
 					loadPrices(parsedPriceData);
@@ -327,13 +336,11 @@
 
 			$("#ParkingLabel").html(priceData.ParkingLabel);
 			$("#ParkingMemberLabel").html(priceData.ParkingMemberLabel);
+			$("#FooterMessage").html(priceData.FooterMessage);
 		}
 	</script>
 	<div id="HeaderContainer">
 		GENERAL ADMISSION
-	</div>
-	<div id="HeaderMessage">
-		ALL SALES ARE SUBJECT TO A 10% SALES TAX
 	</div>
 	<div id="PricesContainer">
 		<div class="PriceRow">
@@ -396,5 +403,6 @@
 			<div id="ParkingMemberLabel" class="PriceMemberCategory"></div>
 		</div>
 	</div>
+	<div id="FooterMessage"></div>
 </body>
 </html>
